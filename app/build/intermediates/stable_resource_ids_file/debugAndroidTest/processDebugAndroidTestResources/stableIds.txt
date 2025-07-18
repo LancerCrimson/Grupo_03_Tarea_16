@@ -1,2 +1,0 @@
-com.example.grupo_03_tarea_16.test:style/WhiteBackgroundTheme = 0x7f010001
-com.example.grupo_03_tarea_16.test:style/WhiteBackgroundDialogTheme = 0x7f010000

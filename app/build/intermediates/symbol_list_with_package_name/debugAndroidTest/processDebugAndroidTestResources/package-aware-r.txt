@@ -1,3 +1,0 @@
-com.example.grupo_03_tarea_16.test
-style WhiteBackgroundDialogTheme
-style WhiteBackgroundTheme
