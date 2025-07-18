@@ -1,0 +1,5 @@
+com.example.grupo_03_tarea_16.test.app-core-1.6.1-0 C:\Users\DELL\.gradle\caches\transforms-4\07ee1d2424eab7718757c1efc31e0e95\transformed\core-1.6.1\res
+com.example.grupo_03_tarea_16.test.app-androidTest-1 C:\Users\DELL\Documents\Moviles\Grupo_3_Tarea_16\app\build\generated\res\resValues\androidTest\debug
+com.example.grupo_03_tarea_16.test.app-mergeDebugAndroidTestResources-2 C:\Users\DELL\Documents\Moviles\Grupo_3_Tarea_16\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.example.grupo_03_tarea_16.test.app-mergeDebugAndroidTestResources-3 C:\Users\DELL\Documents\Moviles\Grupo_3_Tarea_16\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.example.grupo_03_tarea_16.test.app-debugAndroidTest-4 C:\Users\DELL\Documents\Moviles\Grupo_3_Tarea_16\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
