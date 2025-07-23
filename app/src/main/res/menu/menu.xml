@@ -18,4 +18,8 @@
         android:id="@+id/action_audiencia"
         android:title="Registrar Audiencia"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_zona"
+        android:title="Registrar Zona"
+        app:showAsAction="never" />
 </menu>
