@@ -1,5 +1,6 @@
 package com.example.grupo_03_tarea_16.apartadomenu;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -35,6 +37,8 @@ public class PropietarioFragment extends Fragment {
     private ListView lvPropietarios;
     private PropietarioAdapter adapter;
     private ArrayList<Propietario> listaPropietarios = new ArrayList<>();
+    private boolean isEditing = false;
+    private String cedulaEditando = null;
 
     public PropietarioFragment() {}
 
@@ -67,31 +71,88 @@ public class PropietarioFragment extends Fragment {
 
             Propietario propietario = new Propietario(cedula, nombre, ciudad);
 
-            SupabaseClient.insertPropietario(propietario, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    requireActivity().runOnUiThread(() ->
-                            Toast.makeText(requireContext(), "Error al guardar", Toast.LENGTH_SHORT).show());
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        requireActivity().runOnUiThread(() -> {
-                            Toast.makeText(requireContext(), "Guardado correctamente", Toast.LENGTH_SHORT).show();
-                            etCedula.setText("");
-                            etNombre.setText("");
-                            etCiudad.setText("");
-                            cargarPropietarios(); // Recargar lista
-                        });
-                    } else {
-                        Log.e("Supabase", "Error: " + response.body().string());
+            if (isEditing) {
+                // CORREGIDO: cedulaEditando como primer parámetro
+                SupabaseClient.updatePropietario(cedulaEditando, propietario, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        requireActivity().runOnUiThread(() ->
+                                Toast.makeText(requireContext(), "Error al actualizar", Toast.LENGTH_SHORT).show());
                     }
-                }
-            });
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        requireActivity().runOnUiThread(() -> {
+                            Toast.makeText(requireContext(), "Actualizado correctamente", Toast.LENGTH_SHORT).show();
+                            limpiarCampos();
+                            cargarPropietarios();
+                        });
+                    }
+                });
+            } else {
+                SupabaseClient.insertPropietario(propietario, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        requireActivity().runOnUiThread(() ->
+                                Toast.makeText(requireContext(), "Error al guardar", Toast.LENGTH_SHORT).show());
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (response.isSuccessful()) {
+                            requireActivity().runOnUiThread(() -> {
+                                Toast.makeText(requireContext(), "Guardado correctamente", Toast.LENGTH_SHORT).show();
+                                limpiarCampos();
+                                cargarPropietarios();
+                            });
+                        } else {
+                            Log.e("Supabase", "Error: " + response.body().string());
+                        }
+                    }
+                });
+            }
         });
 
-        cargarPropietarios(); // Carga inicial
+
+        lvPropietarios.setOnItemClickListener((parent, view1, position, id) -> {
+            Propietario seleccionado = listaPropietarios.get(position);
+            etCedula.setText(seleccionado.getCedulaP());
+            etCedula.setEnabled(false); // No editable la cédula
+            etNombre.setText(seleccionado.getNombre());
+            etCiudad.setText(seleccionado.getCiudad());
+            isEditing = true;
+            cedulaEditando = seleccionado.getCedulaP();
+            btnGuardar.setText("Actualizar");
+        });
+
+        lvPropietarios.setOnItemLongClickListener((parent, view12, position, id) -> {
+            Propietario seleccionado = listaPropietarios.get(position);
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("Eliminar")
+                    .setMessage("¿Deseas eliminar al propietario con cédula " + seleccionado.getCedulaP() + "?")
+                    .setPositiveButton("Sí", (dialog, which) -> {
+                        SupabaseClient.deletePropietario(seleccionado.getCedulaP(), new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                requireActivity().runOnUiThread(() ->
+                                        Toast.makeText(requireContext(), "Error al eliminar", Toast.LENGTH_SHORT).show());
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                requireActivity().runOnUiThread(() -> {
+                                    Toast.makeText(requireContext(), "Eliminado correctamente", Toast.LENGTH_SHORT).show();
+                                    cargarPropietarios();
+                                });
+                            }
+                        });
+                    })
+                    .setNegativeButton("Cancelar", null)
+                    .show();
+            return true;
+        });
+
+        cargarPropietarios();
         return view;
     }
 
@@ -126,5 +187,15 @@ public class PropietarioFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void limpiarCampos() {
+        etCedula.setText("");
+        etCedula.setEnabled(true);
+        etNombre.setText("");
+        etCiudad.setText("");
+        btnGuardar.setText("Guardar");
+        isEditing = false;
+        cedulaEditando = null;
     }
 }

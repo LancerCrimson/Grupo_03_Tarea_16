@@ -34,7 +34,8 @@ public class SupabaseClient {
     }
 
 
-    // SupabaseClient.java
+    // Propietario
+
     public static void insertPropietario(Propietario propietario, Callback callback) {
         String url = SUPABASE_URL + "/propietario";
 
@@ -64,6 +65,58 @@ public class SupabaseClient {
         Call call = client.newCall(request);
         call.enqueue(callback);
     }
+
+
+    public static void updatePropietario(String cedulaP, Propietario propietario, Callback callback) {
+        String url = SUPABASE_URL + "/propietario?cedulap=eq." + cedulaP;
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("nombre", propietario.getNombre());
+            jsonObject.put("ciudad", propietario.getCiudad());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        RequestBody body = RequestBody.create(
+                jsonObject.toString(),
+                MediaType.parse("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url(url)
+                .patch(body) // PATCH es para actualizar
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Prefer", "return=representation") // Para obtener respuesta si se desea
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
+
+    public static void deletePropietario(String cedulaP, Callback callback) {
+        String url = SUPABASE_URL + "/propietario?cedulap=eq." + cedulaP;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .delete()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Prefer", "return=representation") // opcional
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
+
+
+
 
 
 
