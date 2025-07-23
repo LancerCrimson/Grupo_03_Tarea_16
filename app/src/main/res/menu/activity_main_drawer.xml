@@ -20,5 +20,11 @@
             android:id="@+id/nav_maps"
             android:icon="@drawable/ic_maps"
             android:title="Ubicación" />
+
+
+        <item
+            android:id="@+id/nav_propietario"
+            android:icon="@drawable/ic_maps"
+            android:title="Ubicación" />
     </group>
 </menu>
