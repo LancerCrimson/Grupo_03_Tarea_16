@@ -10,4 +10,8 @@
         android:id="@+id/action_propietario"
         android:title="Registrar Propietario"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_normas"
+        android:title="Registrar Norma"
+        app:showAsAction="never" />
 </menu>

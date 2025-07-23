@@ -66,7 +66,10 @@ public class menu extends AppCompatActivity {
         if (id == R.id.action_propietario) {
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_menu);
             navController.navigate(R.id.nav_propietario);
-        } else if (id == R.id.action_settings) {
+        }else if (id == R.id.action_normas) {
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_menu);
+            navController.navigate(R.id.nav_normas);
+        }else if (id == R.id.action_settings) {
             // Aquí puedes hacer algo para configuración
             return true;
         }
