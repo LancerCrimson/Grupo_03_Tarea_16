@@ -870,6 +870,24 @@ public class DBAdapter {
         return lista;
     }
 
+    public ArrayList<PuesDeControl> getAllPuestosControl() {
+        ArrayList<PuesDeControl> puesDeControl = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_puesdecontrol, ubicacion FROM "+ TABLE_PUESDECONTROL, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String ubicacion = cursor.getString(1);
+                puesDeControl.add(new PuesDeControl(id, ubicacion));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return puesDeControl;
+    }
+
     // ========== MÉTODOS PARA INFRACCION ==========
 
     public long InsertarInfraccion(Infraccion infraccion) {

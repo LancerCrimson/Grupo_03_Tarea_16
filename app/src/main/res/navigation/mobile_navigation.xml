@@ -52,4 +52,10 @@
         android:name="com.example.grupo_03_tarea_16.apartadomenu.PuestoDeControlFragment"
         android:label="PuestodeControl"
         tools:layout="@layout/fragment_puesto_de_control" />
+
+    <fragment
+        android:id="@+id/nav_agente"
+        android:name="com.example.grupo_03_tarea_16.fragmentos.AgenteFragment"
+        android:label="Agente"
+        tools:layout="@layout/fragment_agente" />
 </navigation>

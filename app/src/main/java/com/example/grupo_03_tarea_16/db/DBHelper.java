@@ -275,6 +275,13 @@ public class DBHelper {
         return lista;
     }
 
+    public ArrayList<PuesDeControl> getAllPuestosControl(){
+        dbAdapter.open();
+        ArrayList<PuesDeControl> lista = dbAdapter.getAllPuestosControl();
+        dbAdapter.close();
+        return lista;
+    }
+
     // ========== MÉTODOS PARA AGENTE ==========
 
     public long InsertarAgente(Agente agente) {
