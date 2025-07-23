@@ -128,6 +128,13 @@ public class DBHelper {
         return zonas;
     }
 
+    public ArrayList<Zona> getAllZonas(){
+        dbAdapter.open();
+        ArrayList<Zona> lista = dbAdapter.getAllZonas();
+        dbAdapter.close();
+        return lista;
+    }
+
     // ========== MÉTODOS PARA AUDIENCIA ==========
 
     public long InsertarAudiencia(Audiencia audiencia) {

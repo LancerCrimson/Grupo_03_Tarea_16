@@ -22,4 +22,8 @@
         android:id="@+id/action_zona"
         android:title="Registrar Zona"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_puestoControl"
+        android:title="Registrar Puesto de Control"
+        app:showAsAction="never" />
 </menu>
