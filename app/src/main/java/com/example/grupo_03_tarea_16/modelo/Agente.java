@@ -1,4 +1,4 @@
-package com.example.grupo_03_tarea_16_ejercicio_01.modelos;
+package com.example.grupo_03_tarea_16.modelo;
 
 public class Agente {
     private int idAgente;

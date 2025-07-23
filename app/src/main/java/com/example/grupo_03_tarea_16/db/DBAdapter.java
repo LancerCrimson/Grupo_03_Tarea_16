@@ -11,18 +11,18 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.example.grupo_03_tarea_16_ejercicio_01.modelos.Accidente;
-import com.example.grupo_03_tarea_16_ejercicio_01.modelos.Acta;
-import com.example.grupo_03_tarea_16_ejercicio_01.modelos.Agente;
-import com.example.grupo_03_tarea_16_ejercicio_01.modelos.Audiencia;
-import com.example.grupo_03_tarea_16_ejercicio_01.modelos.Infraccion;
-import com.example.grupo_03_tarea_16_ejercicio_01.modelos.NormasDeT;
-import com.example.grupo_03_tarea_16_ejercicio_01.modelos.OficinaGob;
-import com.example.grupo_03_tarea_16_ejercicio_01.modelos.Propietario;
-import com.example.grupo_03_tarea_16_ejercicio_01.modelos.PuesDeControl;
-import com.example.grupo_03_tarea_16_ejercicio_01.modelos.Usuario;
-import com.example.grupo_03_tarea_16_ejercicio_01.modelos.Vehiculo;
-import com.example.grupo_03_tarea_16_ejercicio_01.modelos.Zona;
+import com.example.grupo_03_tarea_16.modelo.Accidente;
+import com.example.grupo_03_tarea_16.modelo.Acta;
+import com.example.grupo_03_tarea_16.modelo.Agente;
+import com.example.grupo_03_tarea_16.modelo.Audiencia;
+import com.example.grupo_03_tarea_16.modelo.Infraccion;
+import com.example.grupo_03_tarea_16.modelo.NormasDeT;
+import com.example.grupo_03_tarea_16.modelo.OficinaGob;
+import com.example.grupo_03_tarea_16.modelo.Propietario;
+import com.example.grupo_03_tarea_16.modelo.PuesDeControl;
+import com.example.grupo_03_tarea_16.modelo.Usuario;
+import com.example.grupo_03_tarea_16.modelo.Vehiculo;
+import com.example.grupo_03_tarea_16.modelo.Zona;
 
 import java.util.ArrayList;
 
