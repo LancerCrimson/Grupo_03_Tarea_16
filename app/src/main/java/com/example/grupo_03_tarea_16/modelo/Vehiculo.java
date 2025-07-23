@@ -6,13 +6,13 @@ public class Vehiculo {
     private String modelo;
     private String motor;
     private int year;
-    private String media;
+    private byte[] media;
     private String cedulaP; // FK hacia Propietario
 
     public Vehiculo() {}
 
     public Vehiculo(String numPlaca, String marca, String modelo, String motor, int year,
-                    String media, String cedulaP) {
+                    byte[] media, String cedulaP) {
         this.numPlaca = numPlaca;
         this.marca = marca;
         this.modelo = modelo;
@@ -62,11 +62,11 @@ public class Vehiculo {
         this.year = year;
     }
 
-    public String getMedia() {
+    public byte[] getMedia() {
         return media;
     }
 
-    public void setMedia(String media) {
+    public void setMedia(byte[] media) {
         this.media = media;
     }
 

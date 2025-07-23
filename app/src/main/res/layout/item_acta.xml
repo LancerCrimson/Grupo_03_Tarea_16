@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@android:color/white">
+
+    <!-- ID del Acta (opcional para mostrar) -->
+    <TextView
+        android:id="@+id/tv_id_acta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ID Acta: "
+        android:textStyle="bold"
+        android:textColor="#000000" />
+
+    <!-- Accidente asociado -->
+    <TextView
+        android:id="@+id/tv_accidente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Accidente: "
+        android:textColor="#444444" />
+
+    <!-- Audiencia asociada -->
+    <TextView
+        android:id="@+id/tv_audiencia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Audiencia: "
+        android:textColor="#444444" />
+
+    <!-- Zona -->
+    <TextView
+        android:id="@+id/tv_zona"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Zona: "
+        android:textColor="#444444" />
+
+    <!-- Agente -->
+    <TextView
+        android:id="@+id/tv_agente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Agente: "
+        android:textColor="#444444" />
+
+    <!-- Hora y Fecha -->
+    <TextView
+        android:id="@+id/tv_hora"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hora: "
+        android:textColor="#444444" />
+
+    <TextView
+        android:id="@+id/tv_fecha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fecha: "
+        android:textColor="#444444" />
+
+</LinearLayout>

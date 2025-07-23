@@ -9,13 +9,13 @@ public class Accidente {
     private String descripcion;
     private double latitud;
     private double longitud;
-    private String media;
+    private byte[] media;
 
     public Accidente() {
     }
 
     public Accidente(String numPlaca, int idAgente, String hora, String fecha,
-                     String descripcion, double latitud, double longitud, String media) {
+                     String descripcion, double latitud, double longitud, byte[] media) {
         this.numPlaca = numPlaca;
         this.idAgente = idAgente;
         this.hora = hora;
@@ -27,7 +27,7 @@ public class Accidente {
     }
 
     public Accidente(int idAccidente, String numPlaca, int idAgente, String hora, String fecha,
-                     String descripcion, double latitud, double longitud, String media) {
+                     String descripcion, double latitud, double longitud, byte[] media) {
         this.idAccidente = idAccidente;
         this.numPlaca = numPlaca;
         this.idAgente = idAgente;
@@ -103,11 +103,11 @@ public class Accidente {
         this.longitud = longitud;
     }
 
-    public String getMedia() {
+    public byte[] getMedia() {
         return media;
     }
 
-    public void setMedia(String media) {
+    public void setMedia(byte[] media) {
         this.media = media;
     }
 }

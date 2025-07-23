@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="12dp"
+    android:elevation="2dp"
+    android:layout_marginBottom="8dp">
+
+    <!-- Cabecera: Agente, Fecha, Hora -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="4dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_id_agente"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Agente: "
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/tv_fecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2025-07-24"
+            android:textColor="#777777"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/tv_hora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12:30"
+            android:textColor="#777777" />
+
+    </LinearLayout>
+
+    <!-- Descripción del accidente -->
+    <TextView
+        android:id="@+id/tv_descripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descripción del accidente..."
+        android:textColor="#333333"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Imagen del accidente -->
+    <ImageView
+        android:id="@+id/iv_foto_accidente"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_menu_nofoto"
+        android:background="@android:color/darker_gray"
+        android:contentDescription="Foto del Accidente"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Detalles técnicos -->
+    <TextView
+        android:id="@+id/tv_numplaca"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Placa:"
+        android:textColor="#555555" />
+
+    <TextView
+        android:id="@+id/tv_latitud"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Latitud:"
+        android:textColor="#555555" />
+
+    <TextView
+        android:id="@+id/tv_longitud"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Longitud:"
+        android:textColor="#555555" />
+
+</LinearLayout>
