@@ -35,4 +35,9 @@
         android:label="Oficina"
         tools:layout="@layout/fragment_oficinagob" />
 
+    <fragment
+        android:id="@+id/nav_audiencia"
+        android:name="com.example.grupo_03_tarea_16.apartadomenu.AudienciaFragment"
+        android:label="Audiencia"
+        tools:layout="@layout/fragment_audiencia" />
 </navigation>

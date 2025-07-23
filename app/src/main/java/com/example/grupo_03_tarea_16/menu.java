@@ -74,6 +74,9 @@ public class menu extends AppCompatActivity {
         } else if (id == R.id.action_oficina) {
             navController.popBackStack(R.id.nav_home, false);
             navController.navigate(R.id.nav_oficina);
+        }else if (id == R.id.action_audiencia) {
+            navController.popBackStack(R.id.nav_home, false);
+            navController.navigate(R.id.nav_audiencia);
         }
 
         return super.onOptionsItemSelected(item);
