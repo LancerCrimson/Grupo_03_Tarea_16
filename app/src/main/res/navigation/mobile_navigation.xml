@@ -12,18 +12,6 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.grupo_03_tarea_16.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.grupo_03_tarea_16.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
-
-    <fragment
         android:id="@+id/nav_maps"
         android:name="com.example.grupo_03_tarea_16.fragmentos.MapsFragment"
         android:label="Ubicación"
@@ -36,9 +24,32 @@
         tools:layout="@layout/fragment_propietario" />
 
     <fragment
-        android:id="@+id/nav_cerrarsesion"
-        android:name="com.example.grupo_03_tarea_16.CerrarSesionFragment"
-        android:label="Cerrar Sesión"
-        tools:layout="@layout/fragment_cerrar_sesion" />
+        android:id="@+id/nav_normas"
+        android:name="com.example.grupo_03_tarea_16.apartadomenu.NormasdetFragment"
+        android:label="Normas"
+        tools:layout="@layout/fragment_normasdet" />
 
+    <fragment
+        android:id="@+id/nav_oficina"
+        android:name="com.example.grupo_03_tarea_16.apartadomenu.OficinagobFragment"
+        android:label="Oficina"
+        tools:layout="@layout/fragment_oficinagob" />
+
+    <fragment
+        android:id="@+id/nav_audiencia"
+        android:name="com.example.grupo_03_tarea_16.apartadomenu.AudienciaFragment"
+        android:label="Audiencia"
+        tools:layout="@layout/fragment_audiencia" />
+
+    <fragment
+        android:id="@+id/nav_zona"
+        android:name="com.example.grupo_03_tarea_16.apartadomenu.ZonaFragment"
+        android:label="Zona"
+        tools:layout="@layout/fragment_zona" />
+
+    <fragment
+        android:id="@+id/nav_puestoControl"
+        android:name="com.example.grupo_03_tarea_16.apartadomenu.PuestoDeControlFragment"
+        android:label="PuestodeControl"
+        tools:layout="@layout/fragment_puesto_de_control" />
 </navigation>

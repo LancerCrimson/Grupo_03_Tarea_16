@@ -44,7 +44,7 @@ public class menu extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_maps, R.id.nav_cerrarsesion)
+                R.id.nav_home, R.id.nav_maps)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_menu);
@@ -61,14 +61,28 @@ public class menu extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_menu);
+
         int id = item.getItemId();
 
         if (id == R.id.action_propietario) {
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_menu);
+            navController.popBackStack(R.id.nav_home, false);
             navController.navigate(R.id.nav_propietario);
-        } else if (id == R.id.action_settings) {
-            // Aquí puedes hacer algo para configuración
-            return true;
+        } else if (id == R.id.action_normas) {
+            navController.popBackStack(R.id.nav_home, false);
+            navController.navigate(R.id.nav_normas);
+        } else if (id == R.id.action_oficina) {
+            navController.popBackStack(R.id.nav_home, false);
+            navController.navigate(R.id.nav_oficina);
+        }else if (id == R.id.action_audiencia) {
+            navController.popBackStack(R.id.nav_home, false);
+            navController.navigate(R.id.nav_audiencia);
+        }else if (id == R.id.action_zona) {
+            navController.popBackStack(R.id.nav_home, false);
+            navController.navigate(R.id.nav_zona);
+        }else if (id == R.id.action_puestoControl) {
+            navController.popBackStack(R.id.nav_home, false);
+            navController.navigate(R.id.nav_puestoControl);
         }
 
         return super.onOptionsItemSelected(item);

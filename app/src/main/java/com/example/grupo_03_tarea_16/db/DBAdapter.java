@@ -517,6 +517,24 @@ public class DBAdapter {
         return lista;
     }
 
+    public ArrayList<Zona> getAllZonas() {
+        ArrayList<Zona> zonas = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_zona, ubicacion FROM "+ TABLE_ZONA, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String ubicacion = cursor.getString(1);
+                zonas.add(new Zona(id, ubicacion));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return zonas;
+    }
+
     // ========== MÉTODOS PARA AUDIENCIA ==========
 
     public long InsertarAudiencia(Audiencia audiencia) {

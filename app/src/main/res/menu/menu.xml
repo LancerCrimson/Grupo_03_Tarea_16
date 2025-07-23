@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_propietario"
         android:title="Registrar Propietario"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_normas"
+        android:title="Registrar Norma"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_oficina"
+        android:title="Registrar Oficina gubernamental"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_audiencia"
+        android:title="Registrar Audiencia"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_zona"
+        android:title="Registrar Zona"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_puestoControl"
+        android:title="Registrar Puesto de Control"
         app:showAsAction="never" />
 </menu>
