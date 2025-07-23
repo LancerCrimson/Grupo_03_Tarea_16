@@ -80,6 +80,9 @@ public class menu extends AppCompatActivity {
         }else if (id == R.id.action_zona) {
             navController.popBackStack(R.id.nav_home, false);
             navController.navigate(R.id.nav_zona);
+        }else if (id == R.id.action_puestoControl) {
+            navController.popBackStack(R.id.nav_home, false);
+            navController.navigate(R.id.nav_puestoControl);
         }
 
         return super.onOptionsItemSelected(item);
