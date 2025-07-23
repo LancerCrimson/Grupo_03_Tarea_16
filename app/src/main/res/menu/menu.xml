@@ -14,4 +14,8 @@
         android:id="@+id/action_oficina"
         android:title="Registrar Oficina gubernamental"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_audiencia"
+        android:title="Registrar Audiencia"
+        app:showAsAction="never" />
 </menu>
