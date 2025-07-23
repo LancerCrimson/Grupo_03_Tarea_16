@@ -32,9 +32,9 @@ public class NormasAdapter extends ArrayAdapter<NormasDeT> {
         TextView tvnumnorma = convertView.findViewById(R.id.tv_numnorma);
         TextView tvdescripcion = convertView.findViewById(R.id.tv_descripcion);
 
-        tvidnorma.setText("Cédula: " + normasDeT.getIdNorma());
-        tvnumnorma.setText("Nombre: " + normasDeT.getNumNorma());
-        tvdescripcion.setText("Ciudad: " + normasDeT.getDescripcion());
+        tvidnorma.setText("Código: " + normasDeT.getIdNorma());
+        tvnumnorma.setText("Número de Norma: " + normasDeT.getNumNorma());
+        tvdescripcion.setText("Descripción: " + normasDeT.getDescripcion());
 
         return convertView;
     }
