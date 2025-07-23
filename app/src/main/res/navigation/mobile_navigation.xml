@@ -29,4 +29,16 @@
         android:label="Ubicación"
         tools:layout="@layout/fragment_maps" />
 
+    <fragment
+        android:id="@+id/nav_propietario"
+        android:name="com.example.grupo_03_tarea_16.apartadomenu.PropietarioFragment"
+        android:label="Propietario"
+        tools:layout="@layout/fragment_propietario" />
+
+    <fragment
+        android:id="@+id/nav_normas"
+        android:name="com.example.grupo_03_tarea_16.apartadomenu.NormasdetFragment"
+        android:label="Normas"
+        tools:layout="@layout/fragment_normasdet" />
+
 </navigation>
