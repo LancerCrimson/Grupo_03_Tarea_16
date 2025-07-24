@@ -3,24 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".apartadomenu.PuestoDeControlFragment"
-    android:padding="24dp">
+    android:padding="24dp"
+    tools:context=".apartadomenu.PuestoDeControlFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_titulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Datos del Puesto de Control"
-            android:textSize="20sp"
-            android:textStyle="bold"
             android:layout_marginBottom="20dp"
-            android:textColor="@android:color/black" />
+            android:text="Datos del Puesto de Control"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -31,24 +31,32 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_idpuestocontrol"
-                android:inputType="number"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Zona">
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="Zona"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
             <Spinner
                 android:id="@+id/spn_zona"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
+                android:layout_height="match_parent"
+                android:background="@android:drawable/btn_dropdown" />
+        </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -59,27 +67,28 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_ubicacion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btn_guardar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Guardar"
             android:backgroundTint="@color/design_default_color_primary"
-            android:textColor="@android:color/white"
             android:paddingStart="24dp"
-            android:paddingEnd="24dp" />
+            android:paddingEnd="24dp"
+            android:text="Guardar"
+            android:textColor="@android:color/white" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">
+
             <ListView
+                android:id="@+id/lv_puestodecontrol"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/lv_puestodecontrol"/>
+                android:layout_height="match_parent" />
         </LinearLayout>
 
     </LinearLayout>
