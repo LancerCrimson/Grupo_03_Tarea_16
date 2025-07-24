@@ -12,6 +12,7 @@ import com.example.grupo_03_tarea_16.modelo.NormasDeT;
 import com.example.grupo_03_tarea_16.modelo.OficinaGob;
 import com.example.grupo_03_tarea_16.modelo.Propietario;
 import com.example.grupo_03_tarea_16.modelo.PuesDeControl;
+import com.example.grupo_03_tarea_16.modelo.Usuario;
 import com.example.grupo_03_tarea_16.modelo.Vehiculo;
 import com.example.grupo_03_tarea_16.modelo.Zona;
 
@@ -1088,7 +1089,30 @@ public class SupabaseClient {
         client.newCall(request).enqueue(callback);
     }
 
+    //USUARIO
+    public static void insertarUsuario(Usuario usuario, Callback callback) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("id_usuario", usuario.getIdUsuario());
+            json.put("nombres", usuario.getNombres());
+            json.put("apellidos", usuario.getApellidos());
+            json.put("correo", usuario.getCorreo());
+            json.put("password", usuario.getPassword());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/usuario")
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
 
 
 
