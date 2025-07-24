@@ -5,20 +5,35 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
+            android:id="@+id/nav_feed"
+            android:icon="@drawable/ic_menu_feed"
+            android:title="Inicio" />
+
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:id="@+id/nav_accidente"
+            android:icon="@drawable/ic_menu_accidente"
+            android:title="Publicar Accidente" />
+
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:id="@+id/nav_acta"
+            android:icon="@drawable/ic_menu_acta"
+            android:title="Redactar Acta" />
+
         <item
             android:id="@+id/nav_maps"
             android:icon="@drawable/ic_maps"
             android:title="Ubicación" />
+
+        <item
+            android:id="@+id/nav_agente"
+            android:icon="@drawable/ic_person_add"
+            android:title="¿Quieres ser un Agente?" />
+
+        <item
+            android:id="@+id/nav_infraccion"
+            android:icon="@drawable/ic_infraccion"
+            android:title="Registrar Infracción" />
+
+
     </group>
 </menu>

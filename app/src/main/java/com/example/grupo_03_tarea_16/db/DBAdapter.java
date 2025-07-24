@@ -164,7 +164,7 @@ public class DBAdapter {
                     KEY_VEHICULO_MODELO + " TEXT NOT NULL, " +
                     KEY_VEHICULO_MOTOR + " TEXT NOT NULL, " +
                     KEY_VEHICULO_YEAR + " INTEGER NOT NULL, " +
-                    KEY_VEHICULO_MEDIA + " TEXT NOT NULL, " +
+                    KEY_VEHICULO_MEDIA + " BLOB, " +
                     KEY_VEHICULO_CEDULAP + " TEXT NOT NULL, " +
                     "FOREIGN KEY (" + KEY_VEHICULO_CEDULAP + ") REFERENCES " +
                     TABLE_PROPIETARIO + "(" + KEY_CEDULAP + ") ON DELETE CASCADE" +
@@ -228,7 +228,7 @@ public class DBAdapter {
                     KEY_ACCIDENTE_DESCRIPCION + " TEXT NOT NULL, " +
                     KEY_ACCIDENTE_LATITUD + " REAL NOT NULL, " +
                     KEY_ACCIDENTE_LONGITUD + " REAL NOT NULL, " +
-                    KEY_ACCIDENTE_MEDIA + " TEXT NOT NULL, " +
+                    KEY_ACCIDENTE_MEDIA + " BLOB, " +
                     "FOREIGN KEY (" + KEY_ACCIDENTE_NUMPLACA + ") REFERENCES " +
                     TABLE_VEHICULO + "(" + KEY_NUMPLACA + ") ON DELETE CASCADE, " +
                     "FOREIGN KEY (" + KEY_ACCIDENTE_ID_AGENTE + ") REFERENCES " +
@@ -517,6 +517,24 @@ public class DBAdapter {
         return lista;
     }
 
+    public ArrayList<Zona> getAllZonas() {
+        ArrayList<Zona> zonas = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_zona, ubicacion FROM "+ TABLE_ZONA, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String ubicacion = cursor.getString(1);
+                zonas.add(new Zona(id, ubicacion));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return zonas;
+    }
+
     // ========== MÉTODOS PARA AUDIENCIA ==========
 
     public long InsertarAudiencia(Audiencia audiencia) {
@@ -643,6 +661,22 @@ public class DBAdapter {
         return lista;
     }
 
+    public ArrayList<NormasDeT> getAllNormas() {
+        ArrayList<NormasDeT> lista = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_norma, numnorma FROM "+TABLE_NORMASDET, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String numNorma = cursor.getString(1);
+                lista.add(new NormasDeT(id, numNorma));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return lista;
+    }
+
+
     // ========== MÉTODOS PARA VEHICULO ==========
 
     public long InsertarVehiculo(Vehiculo vehiculo) {
@@ -687,7 +721,7 @@ public class DBAdapter {
                 vehiculo.setModelo(cursor.getString(2));
                 vehiculo.setMotor(cursor.getString(3));
                 vehiculo.setYear(cursor.getInt(4));
-                vehiculo.setMedia(cursor.getString(5));
+                vehiculo.setMedia(cursor.getBlob(5));
                 vehiculo.setCedulaP(cursor.getString(6));
             }
             cursor.close();
@@ -710,7 +744,7 @@ public class DBAdapter {
                     vehiculo.setModelo(cursor.getString(2));
                     vehiculo.setMotor(cursor.getString(3));
                     vehiculo.setYear(cursor.getInt(4));
-                    vehiculo.setMedia(cursor.getString(5));
+                    vehiculo.setMedia(cursor.getBlob(5));
                     vehiculo.setCedulaP(cursor.getString(6));
                     lista.add(vehiculo);
                 } while (cursor.moveToNext());
@@ -721,6 +755,25 @@ public class DBAdapter {
         }
         return lista;
     }
+
+    public ArrayList<Vehiculo> getAllVehiculos() {
+        ArrayList<Vehiculo> lista = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT numplaca FROM " + TABLE_VEHICULO, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String placa = cursor.getString(0);
+                lista.add(new Vehiculo(placa));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return lista;
+    }
+
+
 
     // ========== MÉTODOS PARA PUESDECONTROL ==========
 
@@ -849,6 +902,44 @@ public class DBAdapter {
         } catch (Exception e) {
             Log.e("DB", "Error al listar agentes", e);
         }
+        return lista;
+    }
+
+    public ArrayList<PuesDeControl> getAllPuestosControl() {
+        ArrayList<PuesDeControl> puesDeControl = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_puesdecontrol, id_zona, ubicacion FROM " + TABLE_PUESDECONTROL, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int idPuestoControl = cursor.getInt(0);
+                int idZona = cursor.getInt(1);
+                String ubicacion = cursor.getString(2);
+
+                puesDeControl.add(new PuesDeControl(idPuestoControl, idZona, ubicacion));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return puesDeControl;
+    }
+
+
+    public ArrayList<Agente> getAllAgentes() {
+        ArrayList<Agente> lista = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_agente, id_puesdecontrol, nombre FROM " + TABLE_AGENTE, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int idAgente = cursor.getInt(0);
+                int idPuesto = cursor.getInt(1);
+                String nombre = cursor.getString(2);
+                lista.add(new Agente(idAgente, idPuesto, nombre));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
         return lista;
     }
 
@@ -1047,7 +1138,7 @@ public class DBAdapter {
                 accidente.setDescripcion(cursor.getString(5));
                 accidente.setLatitud(cursor.getDouble(6));
                 accidente.setLongitud(cursor.getDouble(7));
-                accidente.setMedia(cursor.getString(8));
+                accidente.setMedia(cursor.getBlob(8));
             }
             cursor.close();
         } catch (Exception e) {
@@ -1072,7 +1163,7 @@ public class DBAdapter {
                     accidente.setDescripcion(cursor.getString(5));
                     accidente.setLatitud(cursor.getDouble(6));
                     accidente.setLongitud(cursor.getDouble(7));
-                    accidente.setMedia(cursor.getString(8));
+                    accidente.setMedia(cursor.getBlob(8));
                     lista.add(accidente);
                 } while (cursor.moveToNext());
             }

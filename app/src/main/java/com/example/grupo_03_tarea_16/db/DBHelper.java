@@ -128,6 +128,13 @@ public class DBHelper {
         return zonas;
     }
 
+    public ArrayList<Zona> getAllZonas(){
+        dbAdapter.open();
+        ArrayList<Zona> lista = dbAdapter.getAllZonas();
+        dbAdapter.close();
+        return lista;
+    }
+
     // ========== MÉTODOS PARA AUDIENCIA ==========
 
     public long InsertarAudiencia(Audiencia audiencia) {
@@ -198,6 +205,13 @@ public class DBHelper {
         return normas;
     }
 
+    public ArrayList<NormasDeT> getAllNorma() {
+        dbAdapter.open();
+        ArrayList<NormasDeT> normas = dbAdapter.getAllNormas();
+        dbAdapter.close();
+        return normas;
+    }
+
     // ========== MÉTODOS PARA VEHICULO ==========
 
     public long InsertarVehiculo(Vehiculo vehiculo) {
@@ -231,6 +245,13 @@ public class DBHelper {
         ArrayList<Vehiculo> vehiculos = dbAdapter.get_all_Vehiculo();
         dbAdapter.close();
         return vehiculos;
+    }
+
+    public ArrayList<Vehiculo> getAllVehiculo() {
+        dbAdapter.open();
+        ArrayList<Vehiculo> vehiculo = dbAdapter.getAllVehiculos();
+        dbAdapter.close();
+        return vehiculo;
     }
 
     // ========== MÉTODOS PARA PUESDECONTROL ==========
@@ -268,6 +289,13 @@ public class DBHelper {
         return lista;
     }
 
+    public ArrayList<PuesDeControl> getAllPuestosControl(){
+        dbAdapter.open();
+        ArrayList<PuesDeControl> lista = dbAdapter.getAllPuestosControl();
+        dbAdapter.close();
+        return lista;
+    }
+
     // ========== MÉTODOS PARA AGENTE ==========
 
     public long InsertarAgente(Agente agente) {
@@ -301,6 +329,13 @@ public class DBHelper {
         ArrayList<Agente> lista = dbAdapter.get_all_Agente();
         dbAdapter.close();
         return lista;
+    }
+
+    public ArrayList<Agente> getAllAgente() {
+        dbAdapter.open();
+        ArrayList<Agente> listaa = dbAdapter.getAllAgentes();
+        dbAdapter.close();
+        return listaa;
     }
 
     // ========== MÉTODOS PARA INFRACCION ==========

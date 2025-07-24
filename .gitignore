@@ -1,20 +1,65 @@
-# Gradle
+# ----------------------------
+# Gradle build folders
+# ----------------------------
 .gradle/
-build/
+*.lock
+*.bin
 */build/
+build/
 
-# Android Studio
+# ----------------------------
+# Archivos ignorables de Android Studio
+# ----------------------------
 .idea/
 *.iml
-*.ipr
 *.iws
 
-# Logs
-*.log
+# ----------------------------
+# Salidas de build y binarios
+# ----------------------------
+*.apk
+*.ap_
+*.dex
+*.class
+*.jar
+*.aar
 
-# Local config
+# ----------------------------
+# Logs y temporales
+# ----------------------------
+*.log
+*.tmp
+
+# ----------------------------
+# Archivos de configuración local
+# ----------------------------
 local.properties
 
-# OS-specific
+# ----------------------------
+# Sistema operativo
+# ----------------------------
 .DS_Store
 Thumbs.db
+
+# ----------------------------
+# Llaves (si usas firmados locales)
+# ----------------------------
+*.jks
+*.keystore
+
+# ----------------------------
+# ¡NO ignores estos! (Gradle Wrapper)
+# (Asegúrate de incluirlos en Git)
+# gradlew
+# gradlew.bat
+# gradle/wrapper/gradle-wrapper.properties
+# gradle/wrapper/gradle-wrapper.jar
+
+*.mp4
+*.avi
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.bak
+

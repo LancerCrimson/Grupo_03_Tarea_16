@@ -9,6 +9,17 @@ public class Agente {
 
     public Agente() {}
 
+    public Agente(int idgente,int idPuestoControl, String nombre) {
+        this.idAgente = idgente;
+        this.idPuestoControl = idPuestoControl;
+        this.nombre = nombre;
+    }
+
+    @Override
+    public String toString() {
+        return this.nombre;
+    }
+
     public Agente(String cedulaA, String nombre, int idPuestoControl, String rango) {
         this.cedulaA = cedulaA;
         this.nombre = nombre;
