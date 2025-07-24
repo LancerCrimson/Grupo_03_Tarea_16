@@ -6,17 +6,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.grupo_03_tarea_16.R;
 import com.example.grupo_03_tarea_16.modelo.OficinaGob;
+import com.example.grupo_03_tarea_16.modelo.PuesDeControl;
+import com.example.grupo_03_tarea_16.modelo.Vehiculo;
 
 import java.util.ArrayList;
 
 public class OficinaAdapter extends ArrayAdapter<OficinaGob> {
 
-    public OficinaAdapter(Context context, ArrayList<OficinaGob> oficinaGob) {
+    private ArrayList<Vehiculo> listanumplaca;
+
+    public OficinaAdapter(Context context, ArrayList<OficinaGob> oficinaGob, ArrayList<Vehiculo> vehiculo) {
         super(context, 0, oficinaGob);
+        this.listanumplaca = vehiculo;
+    }
+
+
+
+    private String obtenerNumPlaca(String numplaca) {
+        for (Vehiculo vehiculo : listanumplaca) {
+            if (vehiculo.getNumPlaca().equals(numplaca)) {
+                return vehiculo.getNombreNumPlaca();
+            }
+        }
+        return "Desconocida";
     }
 
     @SuppressLint("ViewHolder")
@@ -37,7 +54,7 @@ public class OficinaAdapter extends ArrayAdapter<OficinaGob> {
         tvidoficinagob.setText("Código de oficina gubernamental: " + oficinaGob.getIdOficinaGob());
         tvvalorvehiculo.setText("Valor del vehículo: " + oficinaGob.getValorVehiculo());
         tvnpoliza.setText("Número de póliza: " + oficinaGob.getnPoliza());
-        tvnumplaca.setText("Número de placa: " + oficinaGob.getNumPlaca());
+        tvnumplaca.setText("Número de placa: " + obtenerNumPlaca(oficinaGob.getNumPlaca()));
         tvubicacion.setText("Ubicación: " + oficinaGob.getUbicacion());
 
         return convertView;

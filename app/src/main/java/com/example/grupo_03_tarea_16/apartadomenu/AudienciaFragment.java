@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -60,6 +61,31 @@ public class AudienciaFragment extends Fragment {
 
         cargarAudiencias();
 
+        // 📅 Picker de Fecha
+        etFecha.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            new android.app.DatePickerDialog(requireContext(), (view1, year1, month1, dayOfMonth) -> {
+                String fechaSeleccionada = year1 + "-" + String.format("%02d", month1 + 1) + "-" + String.format("%02d", dayOfMonth);
+                etFecha.setText(fechaSeleccionada);
+            }, year, month, day).show();
+        });
+
+        // 🕒 Picker de Hora
+        etHora.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+
+            new android.app.TimePickerDialog(requireContext(), (view1, hourOfDay, minute1) -> {
+                String horaSeleccionada = String.format("%02d:%02d", hourOfDay, minute1);
+                etHora.setText(horaSeleccionada);
+            }, hour, minute, true).show(); // true = formato 24h
+        });
+
         btnGuardar.setOnClickListener(v -> {
             String lugar = etLugar.getText().toString();
             String fecha = etFecha.getText().toString();
@@ -90,6 +116,7 @@ public class AudienciaFragment extends Fragment {
             etHora.setText(audienciaSeleccionada.getHora());
         });
 
+        // ELIMINAR
         lvAudiencia.setOnItemLongClickListener((parent, view12, position, id) -> {
             Audiencia audiencia = listaAudiencia.get(position);
 
@@ -105,9 +132,10 @@ public class AudienciaFragment extends Fragment {
             return true;
         });
 
-
         return view;
     }
+
+
 
     private void cargarAudiencias() {
         SupabaseClient.getAudiencias(new Callback() {

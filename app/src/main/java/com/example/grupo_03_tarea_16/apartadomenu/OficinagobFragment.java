@@ -1,5 +1,4 @@
 package com.example.grupo_03_tarea_16.apartadomenu;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +41,9 @@ public class OficinagobFragment extends Fragment {
     private ArrayList<OficinaGob> oficinaList = new ArrayList<>();
     private OficinaAdapter oficinaAdapter;
 
+    private ArrayList<Vehiculo> vehiculoList = new ArrayList<>();
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,7 +57,9 @@ public class OficinagobFragment extends Fragment {
         btnGuardar = view.findViewById(R.id.btn_guardar);
         lvOficina = view.findViewById(R.id.lv_oficina);
 
-        oficinaAdapter = new OficinaAdapter(requireContext(), oficinaList);
+        oficinaAdapter = new OficinaAdapter(requireContext(), oficinaList, vehiculoList);
+
+
         lvOficina.setAdapter(oficinaAdapter);
 
         cargarPlacas();
@@ -79,11 +83,30 @@ public class OficinagobFragment extends Fragment {
                 if (response.isSuccessful()) {
                     try {
                         JSONArray array = new JSONArray(response.body().string());
-                        placasList.clear();
+                       /* placasList.clear();
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject obj = array.getJSONObject(i);
                             placasList.add(obj.getString("numplaca"));
                         }
+                        */
+
+                        placasList.clear();
+                        vehiculoList.clear();
+
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject obj = array.getJSONObject(i);
+                            String numplaca = obj.getString("numplaca");
+
+                            placasList.add(numplaca);
+
+                            Vehiculo vehiculo = new Vehiculo();
+                            vehiculo.setNumPlaca(numplaca);
+                            // Puedes agregar más campos si tu clase Vehiculo los tiene, como:
+                            // vehiculo.setNombreNumPlaca(obj.getString("descripcion") o algo similar)
+
+                            vehiculoList.add(vehiculo);
+                        }
+
                         requireActivity().runOnUiThread(() -> {
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, placasList);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

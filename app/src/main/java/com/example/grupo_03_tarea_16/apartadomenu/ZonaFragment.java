@@ -95,17 +95,13 @@ public class ZonaFragment extends Fragment {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String responseBody = response.body().string();
-                        Log.d("SUPABASE_RESPONSE", responseBody);
-
+                    public void onResponse(Call call, Response response) {
                         requireActivity().runOnUiThread(() -> {
                             Toast.makeText(requireContext(), "Zona guardada", Toast.LENGTH_SHORT).show();
                             limpiarCampos();
                             cargarZonas();
                         });
                     }
-
                 });
             }
         });

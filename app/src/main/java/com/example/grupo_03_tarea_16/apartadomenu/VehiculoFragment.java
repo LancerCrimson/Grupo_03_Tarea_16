@@ -11,8 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +49,7 @@ public class VehiculoFragment extends Fragment {
     private Spinner spCedula;
     private Button btnFoto, btnGuardar;
     private ListView lvVehiculos;
+
     private ImageView imgPreview;
 
     private List<Propietario> listaPropietarios = new ArrayList<>();
@@ -62,7 +61,7 @@ public class VehiculoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_vehiculo, container, false);
 
-        // Referencias UI
+        // Referencias
         etPlaca = view.findViewById(R.id.et_numplaca);
         etMarca = view.findViewById(R.id.et_marca);
         etModelo = view.findViewById(R.id.et_modelo);
@@ -72,6 +71,8 @@ public class VehiculoFragment extends Fragment {
         btnFoto = view.findViewById(R.id.btn_seleccionar_foto);
         btnGuardar = view.findViewById(R.id.btn_guardar);
         lvVehiculos = view.findViewById(R.id.lv_vehiculos);
+
+
 
         cargarPropietarios();
         cargarVehiculos();
@@ -132,13 +133,16 @@ public class VehiculoFragment extends Fragment {
 
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && data != null) {
             Uri imageUri = data.getData();
+
             try {
                 InputStream inputStream = requireActivity().getContentResolver().openInputStream(imageUri);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
                 imagenSeleccionada = stream.toByteArray();
+
                 Toast.makeText(getContext(), "Imagen cargada", Toast.LENGTH_SHORT).show();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -146,14 +150,14 @@ public class VehiculoFragment extends Fragment {
     }
 
     private void guardarVehiculo() {
-        String placa = etPlaca.getText().toString().trim();
-        String marca = etMarca.getText().toString().trim();
-        String modelo = etModelo.getText().toString().trim();
-        String motor = etMotor.getText().toString().trim();
-        String yearStr = etYear.getText().toString().trim();
-        String cedula = spCedula.getSelectedItem() != null ? spCedula.getSelectedItem().toString() : "";
+        String placa = etPlaca.getText().toString();
+        String marca = etMarca.getText().toString();
+        String modelo = etModelo.getText().toString();
+        String motor = etMotor.getText().toString();
+        String yearStr = etYear.getText().toString();
+        String cedula = spCedula.getSelectedItem().toString();
 
-        if (placa.isEmpty() || marca.isEmpty() || modelo.isEmpty() || motor.isEmpty() || yearStr.isEmpty() || cedula.isEmpty()) {
+        if (placa.isEmpty() || marca.isEmpty() || modelo.isEmpty() || motor.isEmpty() || yearStr.isEmpty()) {
             Toast.makeText(getContext(), "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -190,53 +194,32 @@ public class VehiculoFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    String responseBody = response.body().string();
-                    Log.d("SUPABASE_RESPONSE", responseBody);
-
-                    JSONArray json = new JSONArray(responseBody);
+                    JSONArray json = new JSONArray(response.body().string());
                     List<Vehiculo> vehiculos = new ArrayList<>();
 
                     for (int i = 0; i < json.length(); i++) {
                         JSONObject obj = json.getJSONObject(i);
-
-                        String mediaBase64 = obj.optString("media", "");
-                        byte[] mediaBytes = null;
-                        try {
-                            if (mediaBase64 != null && !mediaBase64.equals("null") && !mediaBase64.isEmpty()) {
-                                mediaBytes = Base64.decode(mediaBase64, Base64.DEFAULT);
-                            }
-                        } catch (IllegalArgumentException e) {
-                            Log.e("Base64Error", "Error al decodificar imagen base64: " + mediaBase64, e);
-                            mediaBytes = null; // Dejar la imagen como null si no se pudo decodificar
-                        }
-
-
                         Vehiculo v = new Vehiculo(
                                 obj.getString("numplaca"),
                                 obj.getString("marca"),
                                 obj.getString("modelo"),
                                 obj.getString("motor"),
                                 obj.getInt("year"),
-                                mediaBytes,
+                                null, // media es opcional aquí
                                 obj.getString("cedulap")
                         );
-
                         vehiculos.add(v);
                     }
 
                     requireActivity().runOnUiThread(() -> {
-                        Toast.makeText(getContext(), "Vehículos cargados: " + vehiculos.size(), Toast.LENGTH_SHORT).show();
                         VehiculoAdapter adapter = new VehiculoAdapter(getContext(), vehiculos);
                         lvVehiculos.setAdapter(adapter);
                     });
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    requireActivity().runOnUiThread(() ->
-                            Toast.makeText(getContext(), "Error al procesar datos", Toast.LENGTH_SHORT).show());
                 }
             }
         });
     }
 }
-

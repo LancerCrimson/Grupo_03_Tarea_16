@@ -41,6 +41,14 @@ public class Accidente {
         this.media = media;
     }
 
+    public Accidente(int idAccidente, String descripcion) {
+        this.idAccidente = idAccidente;
+        this.descripcion = descripcion;
+    }
+
+
+
+
     public int getIdAccidente() {
         return idAccidente;
     }
