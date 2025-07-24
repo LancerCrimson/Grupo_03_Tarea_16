@@ -2,6 +2,8 @@
 # Gradle build folders
 # ----------------------------
 .gradle/
+*.lock
+*.bin
 */build/
 build/
 
@@ -61,7 +63,3 @@ Thumbs.db
 *.7z
 *.bak
 
-# ----------------------------
-# Archivos lock de Gradle u otros
-# ----------------------------
-*.lock
