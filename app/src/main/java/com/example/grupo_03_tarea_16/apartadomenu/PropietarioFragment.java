@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+
 import android.widget.Toast;
+
 
 import com.example.grupo_03_tarea_16.R;
 import com.example.grupo_03_tarea_16.adapter.adaptermenu.PropietarioAdapter;
@@ -104,6 +106,7 @@ public class PropietarioFragment extends Fragment {
                 etCedula.setText("");
                 etNombre.setText("");
                 etCiudad.setText("");
+
 
                 Toast.makeText(requireContext(), "Propietario registrado", Toast.LENGTH_SHORT).show();
             }
