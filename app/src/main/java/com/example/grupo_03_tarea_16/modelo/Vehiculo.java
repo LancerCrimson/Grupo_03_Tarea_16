@@ -15,6 +15,10 @@ public class Vehiculo {
         this.numPlaca = numPlaca;
     }
 
+    public String getNombreNumPlaca(){
+        return numPlaca;
+    }
+
     @Override
     public String toString() {
         return this.numPlaca;
