@@ -11,6 +11,15 @@ public class Vehiculo {
 
     public Vehiculo() {}
 
+    public Vehiculo(String numPlaca) {
+        this.numPlaca = numPlaca;
+    }
+
+    @Override
+    public String toString() {
+        return this.numPlaca;
+    }
+
     public Vehiculo(String numPlaca, String marca, String modelo, String motor, int year,
                     String media, String cedulaP) {
         this.numPlaca = numPlaca;

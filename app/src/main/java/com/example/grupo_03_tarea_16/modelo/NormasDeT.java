@@ -7,6 +7,16 @@ public class NormasDeT {
 
     public NormasDeT() {}
 
+    @Override
+    public String toString() {
+        return this.numNorma;
+    }
+
+    public NormasDeT(int idNorma, String numNorma) {
+        this.idNorma = idNorma;
+        this.numNorma = numNorma;
+    }
+
     public NormasDeT(String numNorma, String descripcion) {
         this.numNorma = numNorma;
         this.descripcion = descripcion;
