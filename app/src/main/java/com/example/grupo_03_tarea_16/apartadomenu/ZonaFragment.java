@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.grupo_03_tarea_16.R;
 import com.example.grupo_03_tarea_16.adapter.adaptermenu.ZonaAdapter;
@@ -98,6 +99,8 @@ public class ZonaFragment extends Fragment {
                 zonaAdapter.notifyDataSetChanged();
                 et_idzona.setText("");
                 et_ubicacion.setText("");
+
+                Toast.makeText(requireContext(), "Zona registrada", Toast.LENGTH_SHORT).show();
             }
         });
 

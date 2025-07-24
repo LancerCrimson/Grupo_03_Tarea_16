@@ -7,13 +7,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.grupo_03_tarea_16.R;
 import com.example.grupo_03_tarea_16.adapter.adaptermenu.OficinaAdapter;
 import com.example.grupo_03_tarea_16.db.DBHelper;
 import com.example.grupo_03_tarea_16.modelo.OficinaGob;
+import com.example.grupo_03_tarea_16.modelo.Vehiculo;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -25,7 +29,8 @@ import java.util.ArrayList;
  */
 public class OficinagobFragment extends Fragment {
 
-    private TextInputEditText et_idoficinagob, et_valorvehiculo, et_npoliza, et_numplaca, et_ubicacion;
+    private TextInputEditText et_idoficinagob, et_valorvehiculo, et_npoliza, et_ubicacion;
+    private Spinner spn_numplaca;
     private Button btn_guardar;
     private ListView lv_oficina;
 
@@ -77,27 +82,34 @@ public class OficinagobFragment extends Fragment {
         et_idoficinagob = view.findViewById(R.id.et_idoficinagob);
         et_valorvehiculo = view.findViewById(R.id.et_valorvehiculo);
         et_npoliza = view.findViewById(R.id.et_npoliza);
-        et_numplaca = view.findViewById(R.id.et_numplaca);
+        spn_numplaca = view.findViewById(R.id.spn_numplaca);
         et_ubicacion = view.findViewById(R.id.et_ubicacion);
         btn_guardar = view.findViewById(R.id.btn_guardar);
         lv_oficina = view.findViewById(R.id.lv_oficina);
 
         DBHelper dbHelper = new DBHelper(getContext());
+
+        ArrayList<Vehiculo> listaVehiculos = dbHelper.getAllVehiculo();
         ArrayList<OficinaGob> listaOficina = dbHelper.get_all_OficinaGob();
-        OficinaAdapter adapter = new OficinaAdapter(getContext(), listaOficina);
+        OficinaAdapter adapter = new OficinaAdapter(getContext(), listaOficina, listaVehiculos);
         lv_oficina.setAdapter(adapter);
+
+        ArrayAdapter<Vehiculo> vehiculoAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listaVehiculos);
+        vehiculoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spn_numplaca.setAdapter(vehiculoAdapter);
 
         btn_guardar.setOnClickListener(v -> {
             String idoficinagob = et_idoficinagob.getText().toString().trim();
             String valorvehiculo = et_valorvehiculo.getText().toString().trim();
             String npoliza = et_npoliza.getText().toString().trim();
-            String numplaca = et_numplaca.getText().toString().trim();
+            Vehiculo vehiculoSeleccionado = (Vehiculo) spn_numplaca.getSelectedItem();
+            String numPlaca = vehiculoSeleccionado.getNumPlaca();
             String ubicacion = et_ubicacion.getText().toString().trim();
             if (!idoficinagob.isEmpty() && !valorvehiculo.isEmpty() && !npoliza.isEmpty()
-                    && !numplaca.isEmpty() && !ubicacion.isEmpty()) {
+                    && !ubicacion.isEmpty()) {
                 int id = Integer.parseInt(idoficinagob);
                 double valor = Double.parseDouble(valorvehiculo);
-                OficinaGob nuevo = new OficinaGob(id, valor, npoliza, numplaca, ubicacion);
+                OficinaGob nuevo = new OficinaGob(id, valor, npoliza, numPlaca, ubicacion);
                 dbHelper.InsertarOficinaGob(nuevo);
                 listaOficina.clear();
                 listaOficina.addAll(dbHelper.get_all_OficinaGob());
@@ -105,8 +117,9 @@ public class OficinagobFragment extends Fragment {
                 et_idoficinagob.setText("");
                 et_valorvehiculo.setText("");
                 et_npoliza.setText("");
-                et_numplaca.setText("");
                 et_ubicacion.setText("");
+
+                Toast.makeText(requireContext(), "Oficina gubernamental registrada", Toast.LENGTH_SHORT).show();
             }
         });
 

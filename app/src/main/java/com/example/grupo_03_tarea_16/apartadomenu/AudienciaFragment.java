@@ -1,5 +1,7 @@
 package com.example.grupo_03_tarea_16.apartadomenu;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.grupo_03_tarea_16.R;
 import com.example.grupo_03_tarea_16.adapter.adaptermenu.AudienciaAdapter;
@@ -17,6 +20,7 @@ import com.example.grupo_03_tarea_16.modelo.Audiencia;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,15 +86,51 @@ public class AudienciaFragment extends Fragment {
         lv_audiencia = view.findViewById(R.id.lv_audiencia);
 
         DBHelper dbHelper = new DBHelper(getContext());
+
+        et_fecha.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            DatePickerDialog datePicker = new DatePickerDialog(
+                    requireContext(),
+                    (view1, year, month, dayOfMonth) -> {
+                        String fechaSeleccionada = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth);
+                        et_fecha.setText(fechaSeleccionada);
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
+            datePicker.show();
+        });
+
+        et_hora.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            TimePickerDialog timePicker = new TimePickerDialog(
+                    requireContext(),
+                    (view12, hourOfDay, minute) -> {
+                        String horaSeleccionada = String.format("%02d:%02d", hourOfDay, minute);
+                        et_hora.setText(horaSeleccionada);
+                    },
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    true
+            );
+            timePicker.show();
+        });
+
         ArrayList<Audiencia> listaAudiencia = dbHelper.get_all_Audiencia();
         AudienciaAdapter adapter = new AudienciaAdapter(getContext(), listaAudiencia);
         lv_audiencia.setAdapter(adapter);
         btn_guardar.setOnClickListener(v -> {
             String idaudiencia = et_idaudiencia.getText().toString().trim();
             String lugar = et_lugar.getText().toString().trim();
+
             String fecha = et_fecha.getText().toString().trim();
             String hora = et_hora.getText().toString().trim();
-            if (!idaudiencia.isEmpty() && !lugar.isEmpty() && !fecha.isEmpty() && !hora.isEmpty()) {
+            if (hora.isEmpty() || fecha.isEmpty()) {
+                Toast.makeText(requireContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!idaudiencia.isEmpty() && !lugar.isEmpty()) {
                 int idaudienciaS = Integer.parseInt(idaudiencia);
                 Audiencia nueva = new Audiencia(idaudienciaS, lugar, fecha, hora);
                 dbHelper.InsertarAudiencia(nueva);
@@ -101,6 +141,8 @@ public class AudienciaFragment extends Fragment {
                 et_lugar.setText("");
                 et_fecha.setText("");
                 et_hora.setText("");
+
+                Toast.makeText(requireContext(), "Audiencia registrada", Toast.LENGTH_SHORT).show();
             }
         });
 
