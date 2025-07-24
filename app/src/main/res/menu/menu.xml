@@ -26,4 +26,8 @@
         android:id="@+id/action_puestoControl"
         android:title="Registrar Puesto de Control"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_vehiculo"
+        android:title="Registrar Vehiculo"
+        app:showAsAction="never" />
 </menu>
