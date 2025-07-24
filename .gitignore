@@ -18,3 +18,15 @@ local.properties
 # OS-specific
 .DS_Store
 Thumbs.db
+
+# Gradle cache y archivos de compilación
+.gradle/
+!gradle-wrapper.jar
+**/fileHashes/
+**/executionHistory/
+**/resourceHashesCache.bin
+**/*.lock
+**/buildOutputCleanup/
+
+# Archivos binarios de hash
+*.bin
