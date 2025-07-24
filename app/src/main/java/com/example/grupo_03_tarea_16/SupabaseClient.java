@@ -15,7 +15,9 @@ import com.example.grupo_03_tarea_16.modelo.PuesDeControl;
 import com.example.grupo_03_tarea_16.modelo.Vehiculo;
 import com.example.grupo_03_tarea_16.modelo.Zona;
 
+
 import org.json.JSONArray;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,7 +33,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
 import okhttp3.ResponseBody;
+
 
 public class SupabaseClient {
 
@@ -544,6 +548,7 @@ public class SupabaseClient {
     }
 
 
+
 /*
     public static void getVehiculos(Callback callback) {
         String url = SUPABASE_URL + "/vehiculo?select=*";
@@ -595,6 +600,7 @@ public class SupabaseClient {
         });
     }
 */
+
 
 
 

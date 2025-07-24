@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
 import android.widget.Toast;
+
 
 import com.example.grupo_03_tarea_16.R;
 import com.example.grupo_03_tarea_16.SupabaseClient;
@@ -125,6 +127,7 @@ public class PropietarioFragment extends Fragment {
             btnGuardar.setText("Actualizar");
         });
 
+
         lvPropietarios.setOnItemLongClickListener((parent, view12, position, id) -> {
             Propietario seleccionado = listaPropietarios.get(position);
             new AlertDialog.Builder(requireContext())
@@ -150,6 +153,11 @@ public class PropietarioFragment extends Fragment {
                     .setNegativeButton("Cancelar", null)
                     .show();
             return true;
+
+
+                Toast.makeText(requireContext(), "Propietario registrado", Toast.LENGTH_SHORT).show();
+            }
+
         });
 
         cargarPropietarios();
