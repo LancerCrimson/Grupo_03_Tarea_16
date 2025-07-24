@@ -15,6 +15,15 @@ public class Zona {
         this.ubicacion = ubicacion;
     }
 
+    @Override
+    public String toString() {
+        return ubicacion;
+    }
+
+    public String getNombreZona(){
+        return ubicacion;
+    }
+
     public int getIdZona() {
         return idZona;
     }

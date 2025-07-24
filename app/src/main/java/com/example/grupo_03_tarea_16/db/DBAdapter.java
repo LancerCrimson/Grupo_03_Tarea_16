@@ -517,6 +517,24 @@ public class DBAdapter {
         return lista;
     }
 
+    public ArrayList<Zona> getAllZonas() {
+        ArrayList<Zona> zonas = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_zona, ubicacion FROM "+ TABLE_ZONA, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String ubicacion = cursor.getString(1);
+                zonas.add(new Zona(id, ubicacion));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return zonas;
+    }
+
     // ========== MÉTODOS PARA AUDIENCIA ==========
 
     public long InsertarAudiencia(Audiencia audiencia) {
@@ -643,6 +661,22 @@ public class DBAdapter {
         return lista;
     }
 
+    public ArrayList<NormasDeT> getAllNormas() {
+        ArrayList<NormasDeT> lista = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_norma, numnorma FROM "+TABLE_NORMASDET, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String numNorma = cursor.getString(1);
+                lista.add(new NormasDeT(id, numNorma));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return lista;
+    }
+
+
     // ========== MÉTODOS PARA VEHICULO ==========
 
     public long InsertarVehiculo(Vehiculo vehiculo) {
@@ -721,6 +755,25 @@ public class DBAdapter {
         }
         return lista;
     }
+
+    public ArrayList<Vehiculo> getAllVehiculos() {
+        ArrayList<Vehiculo> lista = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT numplaca FROM " + TABLE_VEHICULO, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String placa = cursor.getString(0);
+                lista.add(new Vehiculo(placa));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return lista;
+    }
+
+
 
     // ========== MÉTODOS PARA PUESDECONTROL ==========
 
@@ -849,6 +902,44 @@ public class DBAdapter {
         } catch (Exception e) {
             Log.e("DB", "Error al listar agentes", e);
         }
+        return lista;
+    }
+
+    public ArrayList<PuesDeControl> getAllPuestosControl() {
+        ArrayList<PuesDeControl> puesDeControl = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_puesdecontrol, id_zona, ubicacion FROM " + TABLE_PUESDECONTROL, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int idPuestoControl = cursor.getInt(0);
+                int idZona = cursor.getInt(1);
+                String ubicacion = cursor.getString(2);
+
+                puesDeControl.add(new PuesDeControl(idPuestoControl, idZona, ubicacion));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return puesDeControl;
+    }
+
+
+    public ArrayList<Agente> getAllAgentes() {
+        ArrayList<Agente> lista = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_agente, id_puesdecontrol, nombre FROM " + TABLE_AGENTE, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int idAgente = cursor.getInt(0);
+                int idPuesto = cursor.getInt(1);
+                String nombre = cursor.getString(2);
+                lista.add(new Agente(idAgente, idPuesto, nombre));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
         return lista;
     }
 

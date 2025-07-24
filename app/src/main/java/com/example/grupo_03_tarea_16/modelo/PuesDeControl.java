@@ -7,6 +7,15 @@ public class PuesDeControl {
 
     public PuesDeControl() {}
 
+    @Override
+    public String toString() {
+        return ubicacion;
+    }
+
+    public String getNombrePuestoControl(){
+        return ubicacion;
+    }
+
     public PuesDeControl(int idZona, String ubicacion) {
         this.idZona = idZona;
         this.ubicacion = ubicacion;
