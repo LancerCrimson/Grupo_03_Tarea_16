@@ -6,7 +6,7 @@
     android:padding="12dp">
 
     <TextView
-        android:id="@+id/tv_idaudiencia"
+        android:id="@+id/tv_idzona"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"

@@ -13,5 +13,10 @@
             android:id="@+id/nav_maps"
             android:icon="@drawable/ic_maps"
             android:title="Ubicación" />
+
+        <item
+            android:id="@+id/nav_agente"
+            android:icon="@drawable/ic_person_add"
+            android:title="¿Quieres ser un Agente?" />
     </group>
 </menu>
