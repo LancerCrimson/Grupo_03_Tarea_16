@@ -164,7 +164,7 @@ public class DBAdapter {
                     KEY_VEHICULO_MODELO + " TEXT NOT NULL, " +
                     KEY_VEHICULO_MOTOR + " TEXT NOT NULL, " +
                     KEY_VEHICULO_YEAR + " INTEGER NOT NULL, " +
-                    KEY_VEHICULO_MEDIA + " TEXT NOT NULL, " +
+                    KEY_VEHICULO_MEDIA + " BLOB, " +
                     KEY_VEHICULO_CEDULAP + " TEXT NOT NULL, " +
                     "FOREIGN KEY (" + KEY_VEHICULO_CEDULAP + ") REFERENCES " +
                     TABLE_PROPIETARIO + "(" + KEY_CEDULAP + ") ON DELETE CASCADE" +
@@ -721,7 +721,7 @@ public class DBAdapter {
                 vehiculo.setModelo(cursor.getString(2));
                 vehiculo.setMotor(cursor.getString(3));
                 vehiculo.setYear(cursor.getInt(4));
-                vehiculo.setMedia(cursor.getString(5));
+                vehiculo.setMedia(cursor.getBlob(5));
                 vehiculo.setCedulaP(cursor.getString(6));
             }
             cursor.close();
@@ -744,7 +744,7 @@ public class DBAdapter {
                     vehiculo.setModelo(cursor.getString(2));
                     vehiculo.setMotor(cursor.getString(3));
                     vehiculo.setYear(cursor.getInt(4));
-                    vehiculo.setMedia(cursor.getString(5));
+                    vehiculo.setMedia(cursor.getBlob(5));
                     vehiculo.setCedulaP(cursor.getString(6));
                     lista.add(vehiculo);
                 } while (cursor.moveToNext());
