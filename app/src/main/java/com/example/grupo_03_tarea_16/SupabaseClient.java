@@ -15,6 +15,9 @@ import com.example.grupo_03_tarea_16.modelo.PuesDeControl;
 import com.example.grupo_03_tarea_16.modelo.Vehiculo;
 import com.example.grupo_03_tarea_16.modelo.Zona;
 
+
+import org.json.JSONArray;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,6 +33,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import okhttp3.ResponseBody;
+
 
 public class SupabaseClient {
 
@@ -540,6 +546,64 @@ public class SupabaseClient {
 
         client.newCall(request).enqueue(callback);
     }
+
+
+
+/*
+    public static void getVehiculos(Callback callback) {
+        String url = SUPABASE_URL + "/vehiculo?select=*";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onFailure(call, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+
+                    try {
+                        JSONArray jsonArray = new JSONArray(responseBody);
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject vehiculo = jsonArray.getJSONObject(i);
+
+                            if (vehiculo.has("media") && !vehiculo.isNull("media")) {
+                                String mediaBase64 = vehiculo.getString("media");
+                                byte[] mediaBytes = Base64.decode(mediaBase64, Base64.DEFAULT);
+                                vehiculo.put("media", mediaBytes);
+                            }
+                        }
+
+                        callback.onResponse(call, response.newBuilder()
+                                .body(ResponseBody.create(responseBody, MediaType.parse("application/json")))
+                                .build());
+
+                    } catch (Exception e) {
+                        callback.onFailure(call, new IOException("Error parsing JSON", e));
+                    }
+
+                } else {
+                    callback.onFailure(call, new IOException("Error en respuesta: " + response.code()));
+                }
+            }
+        });
+    }
+*/
+
+
+
+
 
     public interface OnImageUploadListener {
         void onSuccess(String publicUrl);

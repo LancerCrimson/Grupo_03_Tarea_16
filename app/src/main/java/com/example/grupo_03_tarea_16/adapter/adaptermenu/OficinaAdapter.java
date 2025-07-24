@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.grupo_03_tarea_16.R;
@@ -23,6 +24,8 @@ public class OficinaAdapter extends ArrayAdapter<OficinaGob> {
         super(context, 0, oficinaGob);
         this.listanumplaca = vehiculo;
     }
+
+
 
     private String obtenerNumPlaca(String numplaca) {
         for (Vehiculo vehiculo : listanumplaca) {

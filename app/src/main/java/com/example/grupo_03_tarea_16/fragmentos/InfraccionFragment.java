@@ -1,11 +1,6 @@
 package com.example.grupo_03_tarea_16.fragmentos;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,174 +10,241 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.grupo_03_tarea_16.R;
+import com.example.grupo_03_tarea_16.SupabaseClient;
 import com.example.grupo_03_tarea_16.adapter.adapterbarra.InfraccionAdapter;
-import com.example.grupo_03_tarea_16.db.DBHelper;
 import com.example.grupo_03_tarea_16.modelo.Agente;
 import com.example.grupo_03_tarea_16.modelo.Infraccion;
 import com.example.grupo_03_tarea_16.modelo.NormasDeT;
 import com.example.grupo_03_tarea_16.modelo.Vehiculo;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
-import java.util.Calendar;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link InfraccionFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.io.IOException;
+import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
 public class InfraccionFragment extends Fragment {
 
-    private TextInputEditText et_idinfraccion, et_valormulta, et_fecha, et_hora;
-    private Spinner spn_idnorma, spn_idagente, spn_numplaca;
-    private Button btn_guardar;
-    private ListView lv_infraccion;
+    private TextInputEditText etIdInfraccion, etValorMulta, etFecha, etHora;
+    private Spinner spnAgente, spnPlaca, spnNorma;
+    private Button btnGuardar;
+    private ListView lvInfracciones;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ArrayList<Agente> listaAgentes = new ArrayList<>();
+    private ArrayList<Vehiculo> listaVehiculos = new ArrayList<>();
+    private ArrayList<NormasDeT> listaNormas = new ArrayList<>();
+    private ArrayList<Infraccion> listaInfracciones = new ArrayList<>();
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private InfraccionAdapter infraccionAdapter;
 
-    public InfraccionFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment InfraccionFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static InfraccionFragment newInstance(String param1, String param2) {
-        InfraccionFragment fragment = new InfraccionFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_infraccion, container, false);
+
+        etIdInfraccion = view.findViewById(R.id.et_idinfraccion);
+        etValorMulta = view.findViewById(R.id.et_valormulta);
+        etFecha = view.findViewById(R.id.et_fecha);
+        etHora = view.findViewById(R.id.et_hora);
+        spnAgente = view.findViewById(R.id.spn_idagente);
+        spnPlaca = view.findViewById(R.id.spn_numplaca);
+        spnNorma = view.findViewById(R.id.spn_idnorma);
+        btnGuardar = view.findViewById(R.id.btn_guardar);
+        lvInfracciones = view.findViewById(R.id.lv_infraccion);
+
+        cargarSpinners();
+        cargarInfracciones();
+
+        btnGuardar.setOnClickListener(v -> guardarInfraccion());
+
+        return view;
+    }
+
+    private void cargarSpinners() {
+        SupabaseClient.listarAgentes(new Callback() {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
+                    JSONArray array = new JSONArray(response.body().string());
+                    listaAgentes.clear();
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject obj = array.getJSONObject(i);
+                        listaAgentes.add(new Agente(
+                                obj.getInt("id_agente"),
+                                obj.getString("cedulaa"),
+                                obj.getString("nombre"),
+                                obj.getInt("id_puesdecontrol"),
+                                obj.getString("rango")
+                        ));
+                    }
+                    getActivity().runOnUiThread(() -> {
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, getNombresAgentes());
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spnAgente.setAdapter(adapter);
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        SupabaseClient.getVehiculos(new Callback() {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
+                    JSONArray array = new JSONArray(response.body().string());
+                    listaVehiculos.clear();
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject obj = array.getJSONObject(i);
+                        listaVehiculos.add(new Vehiculo(
+                                obj.getString("numplaca"),
+                                obj.getString("marca"),
+                                obj.getString("modelo"),
+                                obj.getString("motor"),
+                                obj.getInt("year"),
+                                null, // media opcional
+                                obj.getString("cedulap")
+                        ));
+                    }
+                    getActivity().runOnUiThread(() -> {
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, getPlacasVehiculos());
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spnPlaca.setAdapter(adapter);
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        SupabaseClient.getNormas(new Callback() {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
+                    JSONArray array = new JSONArray(response.body().string());
+                    listaNormas.clear();
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject obj = array.getJSONObject(i);
+                        listaNormas.add(new NormasDeT(
+                                obj.getInt("id_norma"),
+                                obj.getString("numnorma"),
+                                obj.getString("descripcion")
+                        ));
+                    }
+                    getActivity().runOnUiThread(() -> {
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, getNombresNormas());
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spnNorma.setAdapter(adapter);
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void cargarInfracciones() {
+        SupabaseClient.listarInfracciones(new Callback() {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
+                    JSONArray array = new JSONArray(response.body().string());
+                    listaInfracciones.clear();
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject obj = array.getJSONObject(i);
+                        listaInfracciones.add(new Infraccion(
+                                obj.getInt("id_infraccion"),
+                                obj.getInt("id_agente"),
+                                obj.getString("numplaca"),
+                                obj.getDouble("valormulta"),
+                                obj.getString("fecha"),
+                                obj.getInt("id_norma"),
+                                obj.getString("hora")
+                        ));
+                    }
+                    getActivity().runOnUiThread(() -> {
+                        infraccionAdapter = new InfraccionAdapter(getContext(), listaInfracciones, listaAgentes, listaVehiculos, listaNormas);
+                        lvInfracciones.setAdapter(infraccionAdapter);
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void guardarInfraccion() {
+        try {
+            int idAgente = listaAgentes.get(spnAgente.getSelectedItemPosition()).getIdAgente();
+            String numPlaca = listaVehiculos.get(spnPlaca.getSelectedItemPosition()).getNumPlaca();
+            int idNorma = listaNormas.get(spnNorma.getSelectedItemPosition()).getIdNorma();
+            double valorMulta = Double.parseDouble(etValorMulta.getText().toString());
+            String fecha = etFecha.getText().toString();
+            String hora = etHora.getText().toString();
+
+            Infraccion infraccion = new Infraccion(idAgente, numPlaca, valorMulta, fecha, idNorma, hora);
+            SupabaseClient.insertarInfraccion(infraccion, new Callback() {
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Infracción guardada", Toast.LENGTH_SHORT).show();
+                        cargarInfracciones();
+                    });
+                }
+
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Error: Verifica los datos", Toast.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_infraccion, container, false);
+    private ArrayList<String> getNombresAgentes() {
+        ArrayList<String> nombres = new ArrayList<>();
+        for (Agente a : listaAgentes) nombres.add(a.getNombre());
+        return nombres;
+    }
 
-        et_idinfraccion = view.findViewById(R.id.et_idinfraccion);
-        et_valormulta = view.findViewById(R.id.et_valormulta);
-        et_fecha = view.findViewById(R.id.et_fecha);
-        et_hora = view.findViewById(R.id.et_hora);
-        spn_idnorma = view.findViewById(R.id.spn_idnorma);
-        spn_idagente = view.findViewById(R.id.spn_idagente);
-        spn_numplaca = view.findViewById(R.id.spn_numplaca);
-        btn_guardar = view.findViewById(R.id.btn_guardar);
-        lv_infraccion = view.findViewById(R.id.lv_infraccion);
+    private ArrayList<String> getPlacasVehiculos() {
+        ArrayList<String> placas = new ArrayList<>();
+        for (Vehiculo v : listaVehiculos) placas.add(v.getNumPlaca());
+        return placas;
+    }
 
-        DBHelper dbHelper = new DBHelper(getActivity());
-
-        et_fecha.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            DatePickerDialog datePicker = new DatePickerDialog(
-                    requireContext(),
-                    (view1, year, month, dayOfMonth) -> {
-                        String fechaSeleccionada = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth);
-                        et_fecha.setText(fechaSeleccionada);
-                    },
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
-            );
-            datePicker.show();
-        });
-
-        et_hora.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            TimePickerDialog timePicker = new TimePickerDialog(
-                    requireContext(),
-                    (view12, hourOfDay, minute) -> {
-                        String horaSeleccionada = String.format("%02d:%02d", hourOfDay, minute);
-                        et_hora.setText(horaSeleccionada);
-                    },
-                    calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE),
-                    true
-            );
-            timePicker.show();
-        });
-
-
-        ArrayList<Infraccion> listaInfracciones = dbHelper.get_all_Infraccion();
-        ArrayList<Agente> listaAgentes = dbHelper.getAllAgente();
-        ArrayList<Vehiculo> listaVehiculos = dbHelper.getAllVehiculo();
-        ArrayList<NormasDeT> listaNormas = dbHelper.getAllNorma();
-
-        InfraccionAdapter adapter = new InfraccionAdapter(getContext(), listaInfracciones, listaAgentes, listaVehiculos, listaNormas);
-        lv_infraccion.setAdapter(adapter);
-
-        ArrayAdapter<Agente> agenteAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listaAgentes);
-        agenteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spn_idagente.setAdapter(agenteAdapter);
-
-        ArrayAdapter<Vehiculo> vehiculoAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listaVehiculos);
-        vehiculoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spn_numplaca.setAdapter(vehiculoAdapter);
-
-        ArrayAdapter<NormasDeT> normaAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listaNormas);
-        normaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spn_idnorma.setAdapter(normaAdapter);
-
-        btn_guardar.setOnClickListener(v -> {
-            Agente agenteSeleccionado = (Agente) spn_idagente.getSelectedItem();
-            int idAgente = agenteSeleccionado.getIdAgente();
-
-            Vehiculo vehiculoSeleccionado = (Vehiculo) spn_numplaca.getSelectedItem();
-            String numPlaca = vehiculoSeleccionado.getNumPlaca();
-
-            NormasDeT normaSeleccionada = (NormasDeT) spn_idnorma.getSelectedItem();
-            int idNorma = normaSeleccionada.getIdNorma();
-
-            int idInfraccion = Integer.parseInt(et_idinfraccion.getText().toString().trim());
-            double valorMulta = Double.parseDouble(et_valormulta.getText().toString().trim());
-
-            String fecha = et_fecha.getText().toString().trim();
-            String hora = et_hora.getText().toString().trim();
-
-            if (hora.isEmpty() || fecha.isEmpty()) {
-                Toast.makeText(requireContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
-                return;
-            }
-                Infraccion nueva = new Infraccion(idInfraccion, idAgente, numPlaca, valorMulta, fecha, idNorma, hora);
-                dbHelper.InsertarInfraccion(nueva);
-
-                listaInfracciones.clear();
-                listaInfracciones.addAll(dbHelper.get_all_Infraccion());
-                adapter.notifyDataSetChanged();
-
-                et_idinfraccion.setText("");
-                et_valormulta.setText("");
-                et_fecha.setText("");
-                et_hora.setText("");
-
-            Toast.makeText(requireContext(), "Infracción registrada", Toast.LENGTH_SHORT).show();
-        });
-
-        return view;
+    private ArrayList<String> getNombresNormas() {
+        ArrayList<String> nombres = new ArrayList<>();
+        for (NormasDeT n : listaNormas) nombres.add(n.getNumNorma());
+        return nombres;
     }
 }
