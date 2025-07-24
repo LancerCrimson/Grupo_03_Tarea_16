@@ -35,6 +35,11 @@ public class Agente {
         this.rango = rango;
     }
 
+    public Agente(int idAgente, String nombre) {
+        this.idAgente = idAgente;
+        this.nombre = nombre;
+    }
+
     public int getIdAgente() {
         return idAgente;
     }
