@@ -14,6 +14,8 @@ public class Accidente {
     public Accidente() {
     }
 
+
+
     public Accidente(String numPlaca, int idAgente, String hora, String fecha,
                      String descripcion, double latitud, double longitud, byte[] media) {
         this.numPlaca = numPlaca;

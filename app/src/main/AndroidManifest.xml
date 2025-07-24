@@ -62,7 +62,6 @@
             android:label="@string/title_activity_menu"
             android:theme="@style/Theme.Grupo_03_Tarea_16.NoActionBar" />
 
-        <!-- LoginActivity como pantalla principal -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -72,7 +71,6 @@
             </intent-filter>
         </activity>
 
-        <!-- MainActivity sin intent-filter -->
         <activity
             android:name=".MainActivity"
             android:exported="true" />

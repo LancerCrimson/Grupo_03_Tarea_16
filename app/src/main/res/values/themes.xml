@@ -8,6 +8,8 @@
     <style name="Theme.Grupo_03_Tarea_16" parent="Base.Theme.Grupo_03_Tarea_16" />
 
     <style name="Theme.Grupo_03_Tarea_16.NoActionBar">
+        <item name="android:windowBackground">#FFFFFF</item>
+        <item name="android:itemBackground">@drawable/menu_item_background</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
