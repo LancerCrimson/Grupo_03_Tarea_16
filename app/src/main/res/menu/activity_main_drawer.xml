@@ -18,5 +18,11 @@
             android:id="@+id/nav_agente"
             android:icon="@drawable/ic_person_add"
             android:title="¿Quieres ser un Agente?" />
+
+        <item
+            android:id="@+id/nav_infraccion"
+            android:icon="@drawable/ic_infraccion"
+            android:title="Registrar Infracción" />
+
     </group>
 </menu>
