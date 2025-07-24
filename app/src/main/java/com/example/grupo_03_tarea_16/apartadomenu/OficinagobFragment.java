@@ -77,7 +77,7 @@ public class OficinagobFragment extends Fragment {
         et_idoficinagob = view.findViewById(R.id.et_idoficinagob);
         et_valorvehiculo = view.findViewById(R.id.et_valorvehiculo);
         et_npoliza = view.findViewById(R.id.et_npoliza);
-        et_numplaca = view.findViewById(R.id.et_numplaca);
+        et_numplaca = view.findViewById(R.id.spn_numplaca);
         et_ubicacion = view.findViewById(R.id.et_ubicacion);
         btn_guardar = view.findViewById(R.id.btn_guardar);
         lv_oficina = view.findViewById(R.id.lv_oficina);
@@ -112,4 +112,6 @@ public class OficinagobFragment extends Fragment {
 
         return view;
     }
+
+
 }

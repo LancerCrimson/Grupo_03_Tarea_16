@@ -1,6 +1,11 @@
 package com.example.grupo_03_tarea_16;
 
+import android.content.Context;
+import android.net.Uri;
+
+import com.example.grupo_03_tarea_16.modelo.Agente;
 import com.example.grupo_03_tarea_16.modelo.Audiencia;
+import com.example.grupo_03_tarea_16.modelo.Infraccion;
 import com.example.grupo_03_tarea_16.modelo.NormasDeT;
 import com.example.grupo_03_tarea_16.modelo.OficinaGob;
 import com.example.grupo_03_tarea_16.modelo.Propietario;
@@ -11,6 +16,10 @@ import com.example.grupo_03_tarea_16.modelo.Zona;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 
@@ -18,11 +27,16 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SupabaseClient {
 
     private static final String SUPABASE_URL = "https://wqpmwrgkkgfzdpsiyxhq.supabase.co/rest/v1";
     private static final String API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndxcG13cmdra2dmemRwc2l5eGhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMwMjM5OTYsImV4cCI6MjA2ODU5OTk5Nn0.WAXHiheRYrutcun7hcXlAJ8JGk2wacvqZnyjkfeqPKo";
+
+    private static final String SUPABASE_STORAGE_URL = SUPABASE_URL + "/storage/v1/object";
+    private static final String SUPABASE_STORAGE_PUBLIC_URL = SUPABASE_URL + "/storage/v1/object/public";
+
 
     private static final OkHttpClient client = new OkHttpClient();
 
@@ -515,6 +529,62 @@ public class SupabaseClient {
         client.newCall(request).enqueue(callback);
     }
 
+    public interface OnImageUploadListener {
+        void onSuccess(String publicUrl);
+        void onFailure(String errorMessage);
+    }
+
+    public static void uploadImageToSupabaseStorage(Context context, Uri imageUri, String fileName, OnImageUploadListener listener) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(imageUri);
+            ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+
+            int len;
+            while ((len = inputStream.read(buffer)) != -1) {
+                byteBuffer.write(buffer, 0, len);
+            }
+
+            byte[] imageBytes = byteBuffer.toByteArray();
+
+            RequestBody fileBody = RequestBody.create(imageBytes, MediaType.parse("image/jpeg"));
+
+            Request request = new Request.Builder()
+                    .url(SUPABASE_STORAGE_URL + "/object/vehiculos/" + fileName)
+                    .post(fileBody)
+                    .addHeader("Authorization", "Bearer " + API_KEY)
+                    .addHeader("Content-Type", "image/jpeg")
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    listener.onFailure("Fallo al subir imagen: " + e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        String publicUrl = SUPABASE_STORAGE_PUBLIC_URL + "/vehiculos/" + fileName;
+                        listener.onSuccess(publicUrl);
+                    } else {
+                        listener.onFailure("Error al subir imagen: Código " + response.code());
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            listener.onFailure("Excepción: " + e.getMessage());
+        }
+    }
+
+
+
+
+
+
 
 
 
@@ -674,6 +744,162 @@ public class SupabaseClient {
     public static void eliminarPuestoControl(int idPuestoControl, Callback callback) {
         Request request = new Request.Builder()
                 .url(SUPABASE_URL + "/puesdecontrol?id_puesdecontrol=eq." + idPuestoControl)
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+
+    // ===================== AGENTE===================== //
+
+    public static void insertarAgente(Agente agente, Callback callback) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("cedulaa", agente.getCedulaA());
+            json.put("nombre", agente.getNombre());
+            json.put("id_puesdecontrol", agente.getIdPuestoControl());
+            json.put("rango", agente.getRango());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/agente")
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+
+    public static void listarAgentes(Callback callback) {
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/agente?select=*")
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+
+    public static void actualizarAgente(int idAgente, Agente agente, Callback callback) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("cedulaa", agente.getCedulaA());
+            json.put("nombre", agente.getNombre());
+            json.put("id_puesdecontrol", agente.getIdPuestoControl());
+            json.put("rango", agente.getRango());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/agente?id_agente=eq." + idAgente)
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .addHeader("Prefer", "return=representation")
+                .patch(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+
+    public static void eliminarAgente(int idAgente, Callback callback) {
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/agente?id_agente=eq." + idAgente)
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+
+
+
+// ===================== INFRACCION===================== //
+
+    public static void insertarInfraccion(Infraccion infraccion, Callback callback) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("id_agente", infraccion.getIdAgente());
+            json.put("numplaca", infraccion.getNumPlaca());
+            json.put("valormulta", infraccion.getValorMulta());
+            json.put("fecha", infraccion.getFecha());
+            json.put("id_norma", infraccion.getIdNorma());
+            json.put("hora", infraccion.getHora());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/infraccion")
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+
+    public static void listarInfracciones(Callback callback) {
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/infraccion?select=*")
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+
+    public static void actualizarInfraccion(int idInfraccion, Infraccion infraccion, Callback callback) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("id_agente", infraccion.getIdAgente());
+            json.put("numplaca", infraccion.getNumPlaca());
+            json.put("valormulta", infraccion.getValorMulta());
+            json.put("fecha", infraccion.getFecha());
+            json.put("id_norma", infraccion.getIdNorma());
+            json.put("hora", infraccion.getHora());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/infraccion?id_infraccion=eq." + idInfraccion)
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .addHeader("Prefer", "return=representation")
+                .patch(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+
+    public static void eliminarInfraccion(int idInfraccion, Callback callback) {
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/infraccion?id_infraccion=eq." + idInfraccion)
                 .addHeader("apikey", API_KEY)
                 .addHeader("Authorization", "Bearer " + API_KEY)
                 .delete()

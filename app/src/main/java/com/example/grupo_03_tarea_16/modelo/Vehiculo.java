@@ -6,10 +6,19 @@ public class Vehiculo {
     private String modelo;
     private String motor;
     private int year;
-    private String media;
-    private String cedulaP; // FK hacia Propietario
+    private String media; // URL de imagen
+    private String cedulaP;
 
     public Vehiculo() {}
+
+    public Vehiculo(String numPlaca) {
+        this.numPlaca = numPlaca;
+    }
+
+    @Override
+    public String toString() {
+        return this.numPlaca;
+    }
 
     public Vehiculo(String numPlaca, String marca, String modelo, String motor, int year,
                     String media, String cedulaP) {
@@ -77,4 +86,6 @@ public class Vehiculo {
     public void setCedulaP(String cedulaP) {
         this.cedulaP = cedulaP;
     }
+
+
 }

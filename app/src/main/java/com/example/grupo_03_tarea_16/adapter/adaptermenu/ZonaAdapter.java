@@ -29,10 +29,10 @@ public class ZonaAdapter extends ArrayAdapter<Zona> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_zona, parent, false);
         }
 
-        TextView tvidaudiencia = convertView.findViewById(R.id.tv_idaudiencia);
+        TextView tvidzona = convertView.findViewById(R.id.tv_idzona);
         TextView tvubicacion = convertView.findViewById(R.id.tv_ubicacion);
 
-        tvidaudiencia.setText("Código de la Zona: " + zona.getIdZona());
+        tvidzona.setText("Código de la Zona: " + zona.getIdZona());
         tvubicacion.setText("Ubicación: " + zona.getUbicacion());
 
         return convertView;
