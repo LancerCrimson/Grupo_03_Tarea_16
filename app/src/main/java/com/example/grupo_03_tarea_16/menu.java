@@ -83,6 +83,9 @@ public class menu extends AppCompatActivity {
         }else if (id == R.id.action_puestoControl) {
             navController.popBackStack(R.id.nav_home, false);
             navController.navigate(R.id.nav_puestoControl);
+        }else if (id == R.id.action_vehiculo) {
+            navController.popBackStack(R.id.nav_home, false);
+            navController.navigate(R.id.nav_vehiculo);
         }
 
         return super.onOptionsItemSelected(item);

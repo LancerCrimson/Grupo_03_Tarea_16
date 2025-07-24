@@ -64,5 +64,10 @@
         android:name="com.example.grupo_03_tarea_16.fragmentos.InfraccionFragment"
         android:label="Infraccion"
         tools:layout="@layout/fragment_infraccion" />
+    <fragment
+        android:id="@+id/nav_vehiculo"
+        android:name="com.example.grupo_03_tarea_16.apartadomenu.VehiculoFragment"
+        android:label="Vehiculo"
+        tools:layout="@layout/fragment_vehiculo" />
 
 </navigation>
