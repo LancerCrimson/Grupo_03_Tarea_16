@@ -5,9 +5,19 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
+            android:id="@+id/nav_feed"
+            android:icon="@drawable/ic_menu_feed"
+            android:title="Inicio" />
+
+        <item
+            android:id="@+id/nav_accidente"
+            android:icon="@drawable/ic_menu_accidente"
+            android:title="Publicar Accidente" />
+
+        <item
+            android:id="@+id/nav_acta"
+            android:icon="@drawable/ic_menu_acta"
+            android:title="Redactar Acta" />
 
         <item
             android:id="@+id/nav_maps"
@@ -23,6 +33,7 @@
             android:id="@+id/nav_infraccion"
             android:icon="@drawable/ic_infraccion"
             android:title="Registrar Infracción" />
+
 
     </group>
 </menu>

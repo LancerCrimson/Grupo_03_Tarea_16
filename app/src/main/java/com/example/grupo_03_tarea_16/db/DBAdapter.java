@@ -228,7 +228,7 @@ public class DBAdapter {
                     KEY_ACCIDENTE_DESCRIPCION + " TEXT NOT NULL, " +
                     KEY_ACCIDENTE_LATITUD + " REAL NOT NULL, " +
                     KEY_ACCIDENTE_LONGITUD + " REAL NOT NULL, " +
-                    KEY_ACCIDENTE_MEDIA + " TEXT NOT NULL, " +
+                    KEY_ACCIDENTE_MEDIA + " BLOB, " +
                     "FOREIGN KEY (" + KEY_ACCIDENTE_NUMPLACA + ") REFERENCES " +
                     TABLE_VEHICULO + "(" + KEY_NUMPLACA + ") ON DELETE CASCADE, " +
                     "FOREIGN KEY (" + KEY_ACCIDENTE_ID_AGENTE + ") REFERENCES " +
@@ -1138,7 +1138,7 @@ public class DBAdapter {
                 accidente.setDescripcion(cursor.getString(5));
                 accidente.setLatitud(cursor.getDouble(6));
                 accidente.setLongitud(cursor.getDouble(7));
-                accidente.setMedia(cursor.getString(8));
+                accidente.setMedia(cursor.getBlob(8));
             }
             cursor.close();
         } catch (Exception e) {
@@ -1163,7 +1163,7 @@ public class DBAdapter {
                     accidente.setDescripcion(cursor.getString(5));
                     accidente.setLatitud(cursor.getDouble(6));
                     accidente.setLongitud(cursor.getDouble(7));
-                    accidente.setMedia(cursor.getString(8));
+                    accidente.setMedia(cursor.getBlob(8));
                     lista.add(accidente);
                 } while (cursor.moveToNext());
             }

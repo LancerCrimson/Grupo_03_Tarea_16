@@ -50,6 +50,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAw644RjVRFl6EB8e3ShdA6jT_szrDXgvs" />
 
+        <activity android:name=".fragmentos.SeleccionarUbicacionActivity" />
+
         <activity
             android:name=".menu"
             android:exported="false"
