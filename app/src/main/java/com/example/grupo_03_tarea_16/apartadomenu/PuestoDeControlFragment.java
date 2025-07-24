@@ -1,9 +1,9 @@
 package com.example.grupo_03_tarea_16.apartadomenu;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +12,21 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import com.example.grupo_03_tarea_16.R;
-import com.example.grupo_03_tarea_16.SupabaseClient;
 import com.example.grupo_03_tarea_16.adapter.adaptermenu.PuestoControlAdapter;
+import com.example.grupo_03_tarea_16.db.DBHelper;
 import com.example.grupo_03_tarea_16.modelo.PuesDeControl;
 import com.example.grupo_03_tarea_16.modelo.Zona;
 import com.google.android.material.textfield.TextInputEditText;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.io.IOException;
-import java.util.ArrayList;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
+import java.util.ArrayList;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link PuestoDeControlFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class PuestoDeControlFragment extends Fragment {
 
     private TextInputEditText et_idpuestocontrol, et_ubicacion;
@@ -34,15 +34,50 @@ public class PuestoDeControlFragment extends Fragment {
     private Button btn_guardar;
     private ListView lv_puestodecontrol;
 
-    private ArrayList<Zona> listaZonas = new ArrayList<>();
-    private ArrayList<PuesDeControl> listaPuestos = new ArrayList<>();
-    private PuestoControlAdapter adapter;
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
-    private int idEditando = -1;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
 
-    @Nullable
+    public PuestoDeControlFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment PuestoDeControlFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static PuestoDeControlFragment newInstance(String param1, String param2) {
+        PuestoDeControlFragment fragment = new PuestoDeControlFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_puesto_de_control, container, false);
 
         et_idpuestocontrol = view.findViewById(R.id.et_idpuestocontrol);
@@ -51,149 +86,39 @@ public class PuestoDeControlFragment extends Fragment {
         btn_guardar = view.findViewById(R.id.btn_guardar);
         lv_puestodecontrol = view.findViewById(R.id.lv_puestodecontrol);
 
-        cargarZonas();
-        cargarPuestos();
+        DBHelper dbHelper = new DBHelper(getContext());
+        ArrayList<Zona> listaZona = dbHelper.getAllZonas();
+        ArrayList<PuesDeControl> puesDeControl = dbHelper.get_all_PuestoDeControl();
 
-        btn_guardar.setOnClickListener(v -> {
-            int idZona = listaZonas.get(spn_zona.getSelectedItemPosition()).getIdZona();
-            String ubicacion = et_ubicacion.getText().toString();
+        PuestoControlAdapter puestoControlAdapter = new PuestoControlAdapter(getContext(), puesDeControl, listaZona);
+        lv_puestodecontrol.setAdapter(puestoControlAdapter);
 
-            if (ubicacion.isEmpty()) {
-                Toast.makeText(getContext(), "Completa los campos", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        ArrayList<Zona> listaZonas = dbHelper.getAllZonas();
+        ArrayAdapter<Zona> zonaAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listaZonas);
+        zonaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spn_zona.setAdapter(zonaAdapter);
 
-            PuesDeControl puesto = new PuesDeControl(idZona, ubicacion);
+        btn_guardar.setOnClickListener( v -> {
+            Zona zonaSeleccionada = (Zona) spn_zona.getSelectedItem();
+            int idZona = zonaSeleccionada.getIdZona();
+            int idPuestoControl = Integer.parseInt(et_idpuestocontrol.getText().toString().trim());
+            String ubicacion = et_ubicacion.getText().toString().trim();
 
-            if (idEditando == -1) {
-                SupabaseClient.insertarPuestoControl(puesto, callback("insertado"));
-            } else {
-                SupabaseClient.actualizarPuestoControl(idEditando, puesto, callback("actualizado"));
-                idEditando = -1;
+            if (!ubicacion.isEmpty()) {
+                PuesDeControl nuevo = new PuesDeControl(idPuestoControl, idZona, ubicacion);
+                dbHelper.InsertarPuestoDeControl(nuevo);
+
+                puesDeControl.clear();
+                puesDeControl.addAll(dbHelper.get_all_PuestoDeControl());
+                puestoControlAdapter.notifyDataSetChanged();
+                et_idpuestocontrol.setText("");
+                et_ubicacion.setText("");
+
+                Toast.makeText(requireContext(), "Puesto de Control registrado", Toast.LENGTH_SHORT).show();
             }
         });
 
-        lv_puestodecontrol.setOnItemClickListener((parent, view1, position, id) -> {
-            PuesDeControl p = listaPuestos.get(position);
-            et_idpuestocontrol.setText(String.valueOf(p.getIdPuestoControl()));
-            et_ubicacion.setText(p.getUbicacion());
-            for (int i = 0; i < listaZonas.size(); i++) {
-                if (listaZonas.get(i).getIdZona() == p.getIdZona()) {
-                    spn_zona.setSelection(i);
-                    break;
-                }
-            }
-            idEditando = p.getIdPuestoControl();
-        });
-
-        lv_puestodecontrol.setOnItemLongClickListener((parent, view12, position, id) -> {
-            PuesDeControl p = listaPuestos.get(position);
-            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                    .setTitle("¿Eliminar?")
-                    .setMessage("¿Deseas eliminar este puesto de control?")
-                    .setPositiveButton("Sí", (dialog, which) -> SupabaseClient.eliminarPuestoControl(p.getIdPuestoControl(), callback("eliminado")))
-                    .setNegativeButton("Cancelar", null)
-                    .show();
-            return true;
-        });
 
         return view;
-    }
-
-    private Callback callback(String accion) {
-        return new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                requireActivity().runOnUiThread(() ->
-                        Toast.makeText(getContext(), "Error al " + accion, Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    requireActivity().runOnUiThread(() -> {
-                        Toast.makeText(getContext(), "Puesto " + accion + " correctamente", Toast.LENGTH_SHORT).show();
-                        limpiarCampos();
-                        cargarPuestos();
-                    });
-                }
-            }
-        };
-    }
-
-    private void cargarZonas() {
-        SupabaseClient.getZonas(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                requireActivity().runOnUiThread(() ->
-                        Toast.makeText(getContext(), "Error cargando zonas", Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful() && response.body() != null) {
-                    String res = response.body().string();
-                    try {
-                        JSONArray jsonArray = new JSONArray(res);
-                        listaZonas.clear();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject o = jsonArray.getJSONObject(i);
-                            Zona z = new Zona(o.getInt("id_zona"), o.getString("ubicacion"));
-                            listaZonas.add(z);
-                        }
-                        requireActivity().runOnUiThread(() -> {
-                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item);
-                            for (Zona z : listaZonas) spinnerAdapter.add(z.getNombreZona());
-                            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spn_zona.setAdapter(spinnerAdapter);
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
-    private void cargarPuestos() {
-        SupabaseClient.listarPuestosControl(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                requireActivity().runOnUiThread(() ->
-                        Toast.makeText(getContext(), "Error cargando puestos", Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful() && response.body() != null) {
-                    String res = response.body().string();
-                    try {
-                        JSONArray jsonArray = new JSONArray(res);
-                        listaPuestos.clear();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject o = jsonArray.getJSONObject(i);
-                            PuesDeControl p = new PuesDeControl(
-                                    o.getInt("id_puesdecontrol"),
-                                    o.getInt("id_zona"),
-                                    o.getString("ubicacion")
-                            );
-                            listaPuestos.add(p);
-                        }
-                        requireActivity().runOnUiThread(() -> {
-                            adapter = new PuestoControlAdapter(requireContext(), listaPuestos, listaZonas);
-                            lv_puestodecontrol.setAdapter(adapter);
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
-    private void limpiarCampos() {
-        et_idpuestocontrol.setText("");
-        et_ubicacion.setText("");
-        spn_zona.setSelection(0);
     }
 }

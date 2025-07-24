@@ -1,6 +1,9 @@
 package com.example.grupo_03_tarea_16.fragmentos;
 
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,241 +13,121 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-
 import com.example.grupo_03_tarea_16.R;
-import com.example.grupo_03_tarea_16.SupabaseClient;
 import com.example.grupo_03_tarea_16.adapter.adapterbarra.AgenteAdapter;
+import com.example.grupo_03_tarea_16.adapter.adaptermenu.PuestoControlAdapter;
+import com.example.grupo_03_tarea_16.db.DBHelper;
 import com.example.grupo_03_tarea_16.modelo.Agente;
 import com.example.grupo_03_tarea_16.modelo.PuesDeControl;
+import com.example.grupo_03_tarea_16.modelo.Zona;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link AgenteFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class AgenteFragment extends Fragment {
 
-    private TextInputEditText et_idagente, et_cedulaa, et_nombre, et_rango;
-    private Spinner spn_puestocontrol;
-    private Button btn_guardar;
-    private ListView lv_agente;
+    private TextInputEditText etIdAgente, etCedulaA, etNombre, etRango;
+    private Spinner spnPuestoControl;
+    private Button btnGuardar;
+    private ListView lvagente;
 
-    private ArrayList<Agente> listaAgentes = new ArrayList<>();
-    private ArrayList<PuesDeControl> listaPuestos = new ArrayList<>();
-    private AgenteAdapter adapter;
-    private int idAgenteSeleccionado = -1;
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
-    public AgenteFragment() {}
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
+    public AgenteFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment AgenteFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static AgenteFragment newInstance(String param1, String param2) {
+        AgenteFragment fragment = new AgenteFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_agente, container, false);
-    }
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_agente, container, false);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        etIdAgente = view.findViewById(R.id.et_idagente);
+        etCedulaA = view.findViewById(R.id.et_cedulaa);
+        etNombre = view.findViewById(R.id.et_nombre);
+        spnPuestoControl = view.findViewById(R.id.spn_puestocontrol);
+        etRango = view.findViewById(R.id.et_rango);
+        btnGuardar = view.findViewById(R.id.btn_guardar);
+        lvagente = view.findViewById(R.id.lv_agente);
 
-        et_idagente = view.findViewById(R.id.et_idagente);
-        et_cedulaa = view.findViewById(R.id.et_cedulaa);
-        et_nombre = view.findViewById(R.id.et_nombre);
-        et_rango = view.findViewById(R.id.et_rango);
-        spn_puestocontrol = view.findViewById(R.id.spn_puestocontrol);
-        btn_guardar = view.findViewById(R.id.btn_guardar);
-        lv_agente = view.findViewById(R.id.lv_agente);
+        DBHelper dbHelper = new DBHelper(getActivity());
 
-        adapter = new AgenteAdapter(requireContext(), listaAgentes, listaPuestos);
-        lv_agente.setAdapter(adapter);
+        ArrayList<PuesDeControl> listaPuesDeControl = dbHelper.getAllPuestosControl();
+        ArrayList<Agente> agente = dbHelper.get_all_Agente();
 
-        cargarPuestosControl();
-        listarAgentes();
+        AgenteAdapter agenteAdapter = new AgenteAdapter(getContext(), agente, listaPuesDeControl);
+        lvagente.setAdapter(agenteAdapter);
 
-        btn_guardar.setOnClickListener(v -> guardarOActualizarAgente());
+        ArrayList<PuesDeControl> listapuestoDeControl = dbHelper.getAllPuestosControl();
+        ArrayAdapter<PuesDeControl> puestoControlAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listapuestoDeControl);
+        puestoControlAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnPuestoControl.setAdapter(puestoControlAdapter);
 
-        lv_agente.setOnItemClickListener((parent, view1, position, id) -> {
-            Agente agente = listaAgentes.get(position);
-            idAgenteSeleccionado = agente.getIdAgente();
-            et_idagente.setText(String.valueOf(agente.getIdAgente()));
-            et_cedulaa.setText(agente.getCedulaA());
-            et_nombre.setText(agente.getNombre());
-            et_rango.setText(agente.getRango());
+        btnGuardar.setOnClickListener( v -> {
+            PuesDeControl puestoSeleccionada = (PuesDeControl) spnPuestoControl.getSelectedItem();
+            int idPuestoControl = puestoSeleccionada.getIdPuestoControl();
+            int idAgente = Integer.parseInt(etIdAgente.getText().toString().trim());
+            String cedulaA = etCedulaA.getText().toString().trim();
+            String nombre = etNombre.getText().toString().trim();
+            String rango = etRango.getText().toString().trim();
 
-            for (int i = 0; i < listaPuestos.size(); i++) {
-                if (listaPuestos.get(i).getIdPuestoControl() == agente.getIdPuestoControl()) {
-                    spn_puestocontrol.setSelection(i);
-                    break;
-                }
+            if (!cedulaA.isEmpty() && !nombre.isEmpty() && !rango.isEmpty()) {
+                Agente nuevo = new Agente(idAgente, cedulaA, nombre,idPuestoControl,rango);
+                dbHelper.InsertarAgente(nuevo);
+
+                agente.clear();
+                agente.addAll(dbHelper.get_all_Agente());
+                agenteAdapter.notifyDataSetChanged();
+                etIdAgente.setText("");
+                etCedulaA.setText("");
+                etNombre.setText("");
+                etRango.setText("");
+
+                Toast.makeText(requireContext(), "Te volviste Agente", Toast.LENGTH_SHORT).show();
             }
         });
 
-        lv_agente.setOnItemLongClickListener((parent, view12, position, id) -> {
-            Agente agente = listaAgentes.get(position);
-
-            new AlertDialog.Builder(requireContext())
-                    .setTitle("Eliminar agente")
-                    .setMessage("¿Seguro que deseas eliminar a " + agente.getNombre() + "?")
-                    .setPositiveButton("Eliminar", (dialog, which) -> {
-                        SupabaseClient.eliminarAgente(agente.getIdAgente(), new Callback() {
-                            @Override
-                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                                requireActivity().runOnUiThread(() ->
-                                        Toast.makeText(requireContext(), "Error al eliminar", Toast.LENGTH_SHORT).show());
-                            }
-
-                            @Override
-                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                                requireActivity().runOnUiThread(() -> {
-                                    Toast.makeText(requireContext(), "Agente eliminado", Toast.LENGTH_SHORT).show();
-                                    listarAgentes();
-                                });
-                            }
-                        });
-                    })
-                    .setNegativeButton("Cancelar", null)
-                    .show();
-
-            return true;
-        });
-    }
-
-    private void cargarPuestosControl() {
-        SupabaseClient.listarPuestosControl(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    try {
-                        JSONArray jsonArray = new JSONArray(response.body().string());
-                        listaPuestos.clear();
-                        ArrayList<String> nombres = new ArrayList<>();
-
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject obj = jsonArray.getJSONObject(i);
-                            int id = obj.getInt("id_puesdecontrol");
-                            int idZona = obj.getInt("id_zona");
-                            String ubicacion = obj.getString("ubicacion");
-                            listaPuestos.add(new PuesDeControl(id, idZona, ubicacion));
-                            nombres.add(ubicacion);
-                        }
-
-                        requireActivity().runOnUiThread(() -> {
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, nombres);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spn_puestocontrol.setAdapter(adapter);
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
-    private void listarAgentes() {
-        SupabaseClient.listarAgentes(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    try {
-                        JSONArray jsonArray = new JSONArray(response.body().string());
-                        listaAgentes.clear();
-
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject obj = jsonArray.getJSONObject(i);
-                            int id = obj.getInt("id_agente");
-                            String cedula = obj.getString("cedulaa");
-                            String nombre = obj.getString("nombre");
-                            int idPuesto = obj.getInt("id_puesdecontrol");
-                            String rango = obj.getString("rango");
-
-                            listaAgentes.add(new Agente(id, cedula, nombre, idPuesto, rango));
-                        }
-
-                        requireActivity().runOnUiThread(() -> adapter.notifyDataSetChanged());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
-    private void guardarOActualizarAgente() {
-        String cedula = et_cedulaa.getText().toString();
-        String nombre = et_nombre.getText().toString();
-        String rango = et_rango.getText().toString();
-        int indexPuesto = spn_puestocontrol.getSelectedItemPosition();
-
-        if (cedula.isEmpty() || nombre.isEmpty() || rango.isEmpty() || indexPuesto == -1) {
-            Toast.makeText(requireContext(), "Complete todos los campos", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        int idPuesto = listaPuestos.get(indexPuesto).getIdPuestoControl();
-        Agente agente = new Agente(0, cedula, nombre, idPuesto, rango);
-
-        if (idAgenteSeleccionado == -1) {
-            SupabaseClient.insertarAgente(agente, new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    requireActivity().runOnUiThread(() -> {
-                        limpiarCampos();
-                        listarAgentes();
-                        Toast.makeText(requireContext(), "Agente registrado", Toast.LENGTH_SHORT).show();
-                    });
-                }
-            });
-        } else {
-            SupabaseClient.actualizarAgente(idAgenteSeleccionado, agente, new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    requireActivity().runOnUiThread(() -> {
-                        limpiarCampos();
-                        listarAgentes();
-                        Toast.makeText(requireContext(), "Agente actualizado", Toast.LENGTH_SHORT).show();
-                    });
-                }
-            });
-        }
-    }
-
-    private void limpiarCampos() {
-        et_idagente.setText("");
-        et_cedulaa.setText("");
-        et_nombre.setText("");
-        et_rango.setText("");
-        spn_puestocontrol.setSelection(0);
-        idAgenteSeleccionado = -1;
+        return view;
     }
 }

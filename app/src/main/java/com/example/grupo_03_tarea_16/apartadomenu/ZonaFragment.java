@@ -1,11 +1,9 @@
 package com.example.grupo_03_tarea_16.apartadomenu;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,181 +12,98 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.grupo_03_tarea_16.R;
-import com.example.grupo_03_tarea_16.SupabaseClient;
 import com.example.grupo_03_tarea_16.adapter.adaptermenu.ZonaAdapter;
+import com.example.grupo_03_tarea_16.db.DBHelper;
 import com.example.grupo_03_tarea_16.modelo.Zona;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link ZonaFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class ZonaFragment extends Fragment {
 
-    private TextInputEditText etIdZona, etUbicacion;
-    private Button btnGuardar;
-    private ListView lvZonas;
-    private ArrayList<Zona> listaZonas = new ArrayList<>();
-    private ZonaAdapter zonaAdapter;
+    private TextInputEditText et_idzona, et_ubicacion;
+    private Button btn_guardar;
+    private ListView lv_zona;
 
-    private boolean isEditing = false;
-    private int idZonaEditando = -1;
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
-    public ZonaFragment() {}
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
 
-    public static ZonaFragment newInstance() {
-        return new ZonaFragment();
+    public ZonaFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment ZonaFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static ZonaFragment newInstance(String param1, String param2) {
+        ZonaFragment fragment = new ZonaFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_zona, container, false);
 
-        etIdZona = view.findViewById(R.id.et_idzona);
-        etUbicacion = view.findViewById(R.id.et_ubicacion);
-        btnGuardar = view.findViewById(R.id.btn_guardar);
-        lvZonas = view.findViewById(R.id.lv_zona);
+        et_idzona = view.findViewById(R.id.et_idzona);
+        et_ubicacion = view.findViewById(R.id.et_ubicacion);
+        btn_guardar = view.findViewById(R.id.btn_guardar);
+        lv_zona = view.findViewById(R.id.lv_zona);
 
-        zonaAdapter = new ZonaAdapter(requireContext(), listaZonas);
-        lvZonas.setAdapter(zonaAdapter);
+        DBHelper dbHelper = new DBHelper(getContext());
 
-        btnGuardar.setOnClickListener(v -> {
-            String ubicacion = etUbicacion.getText().toString().trim();
-            if (ubicacion.isEmpty()) {
-                Toast.makeText(requireContext(), "Ingrese ubicación", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        ArrayList<Zona> zona = dbHelper.get_all_Zona();
+        ZonaAdapter zonaAdapter = new ZonaAdapter(getContext(), zona);
+        lv_zona.setAdapter(zonaAdapter);
 
-            Zona zona = new Zona();
-            zona.setUbicacion(ubicacion);
+        btn_guardar.setOnClickListener( v -> {
+            String idzona = et_idzona.getText().toString().trim();
+            String ubicacion = et_ubicacion.getText().toString().trim();
+            if (!idzona.isEmpty() && !ubicacion.isEmpty()) {
+                int idzonaS = Integer.parseInt(idzona);
+                Zona nueva = new Zona(idzonaS, ubicacion);
+                dbHelper.InsertarZona(nueva);
+                zona.clear();
+                zona.addAll(dbHelper.get_all_Zona());
+                zonaAdapter.notifyDataSetChanged();
+                et_idzona.setText("");
+                et_ubicacion.setText("");
 
-            if (isEditing) {
-                SupabaseClient.updateZona(idZonaEditando, zona, new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        requireActivity().runOnUiThread(() ->
-                                Toast.makeText(requireContext(), "Error al actualizar", Toast.LENGTH_SHORT).show());
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) {
-                        requireActivity().runOnUiThread(() -> {
-                            Toast.makeText(requireContext(), "Zona actualizada", Toast.LENGTH_SHORT).show();
-                            limpiarCampos();
-                            cargarZonas();
-                        });
-                    }
-                });
-            } else {
-                SupabaseClient.insertZona(zona, new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        requireActivity().runOnUiThread(() ->
-                                Toast.makeText(requireContext(), "Error al insertar", Toast.LENGTH_SHORT).show());
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String responseBody = response.body().string();
-                        Log.d("SUPABASE_RESPONSE", responseBody);
-
-                        requireActivity().runOnUiThread(() -> {
-                            Toast.makeText(requireContext(), "Zona guardada", Toast.LENGTH_SHORT).show();
-                            limpiarCampos();
-                            cargarZonas();
-                        });
-                    }
-
-                });
+                Toast.makeText(requireContext(), "Zona registrada", Toast.LENGTH_SHORT).show();
             }
         });
 
-        lvZonas.setOnItemClickListener((parent, view1, position, id) -> {
-            Zona zona = listaZonas.get(position);
-            etIdZona.setText(String.valueOf(zona.getIdZona()));
-            etIdZona.setEnabled(false);
-            etUbicacion.setText(zona.getUbicacion());
-
-            isEditing = true;
-            idZonaEditando = zona.getIdZona();
-            btnGuardar.setText("Actualizar");
-        });
-
-        lvZonas.setOnItemLongClickListener((parent, view12, position, id) -> {
-            Zona zona = listaZonas.get(position);
-            new AlertDialog.Builder(requireContext())
-                    .setTitle("Eliminar zona")
-                    .setMessage("¿Deseas eliminar la zona con ID " + zona.getIdZona() + "?")
-                    .setPositiveButton("Sí", (dialog, which) -> {
-                        SupabaseClient.deleteZona(zona.getIdZona(), new Callback() {
-                            @Override
-                            public void onFailure(Call call, IOException e) {
-                                requireActivity().runOnUiThread(() ->
-                                        Toast.makeText(requireContext(), "Error al eliminar", Toast.LENGTH_SHORT).show());
-                            }
-
-                            @Override
-                            public void onResponse(Call call, Response response) {
-                                requireActivity().runOnUiThread(() -> {
-                                    Toast.makeText(requireContext(), "Zona eliminada", Toast.LENGTH_SHORT).show();
-                                    cargarZonas();
-                                });
-                            }
-                        });
-                    })
-                    .setNegativeButton("Cancelar", null)
-                    .show();
-            return true;
-        });
-
-        cargarZonas();
         return view;
-    }
-
-    private void cargarZonas() {
-        SupabaseClient.getZonas(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                requireActivity().runOnUiThread(() ->
-                        Toast.makeText(requireContext(), "Error al cargar zonas", Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful() && response.body() != null) {
-                    String data = response.body().string();
-                    try {
-                        JSONArray jsonArray = new JSONArray(data);
-                        listaZonas.clear();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject obj = jsonArray.getJSONObject(i);
-                            Zona zona = new Zona();
-                            zona.setIdZona(obj.getInt("id_zona"));
-                            zona.setUbicacion(obj.getString("ubicacion"));
-                            listaZonas.add(zona);
-                        }
-                        requireActivity().runOnUiThread(() -> zonaAdapter.notifyDataSetChanged());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
-    private void limpiarCampos() {
-        etIdZona.setText("");
-        etIdZona.setEnabled(true);
-        etUbicacion.setText("");
-        isEditing = false;
-        idZonaEditando = -1;
-        btnGuardar.setText("Guardar");
     }
 }
