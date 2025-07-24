@@ -21,6 +21,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.grupo_03_tarea_16.R;
 import com.example.grupo_03_tarea_16.adapter.adapterbarra.AccidenteAdapter;
@@ -177,18 +180,20 @@ public class AccidenteFragment extends Fragment {
             new AlertDialog.Builder(requireContext())
                     .setTitle("Foto del accidente")
                     .setItems(new CharSequence[]{"Tomar foto", "Galería"}, (dlg, which) -> {
-                        Intent intent;
                         if (which == 0) {
-                            intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            startActivityForResult(intent, REQ_CAMARA);
+                            if (verificarPermisoCamara()) {
+                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(intent, REQ_CAMARA);
+                            }
                         } else {
-                            intent = new Intent(Intent.ACTION_PICK,
+                            Intent intent = new Intent(Intent.ACTION_PICK,
                                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(intent, REQ_GALERIA);
                         }
                     })
                     .show();
         });
+
 
         // --- Ubicación ---
         btnUbicacion.setOnClickListener(v -> {
@@ -270,4 +275,30 @@ public class AccidenteFragment extends Fragment {
                 break;
         }
     }
+
+    private static final int PERMISO_CAMARA = 200;
+
+    private boolean verificarPermisoCamara() {
+        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{android.Manifest.permission.CAMERA},
+                    PERMISO_CAMARA);
+            return false;
+        }
+        return true;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISO_CAMARA) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(requireContext(), "Permiso de cámara concedido", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(requireContext(), "Permiso de cámara denegado", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 }

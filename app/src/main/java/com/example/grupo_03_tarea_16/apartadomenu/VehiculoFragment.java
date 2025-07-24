@@ -129,6 +129,7 @@ public class VehiculoFragment extends Fragment {
 
         // 4) Botón foto
         btnFoto.setOnClickListener(v -> {
+            solicitarPermisos();
             new AlertDialog.Builder(requireContext())
                     .setTitle("Foto del Vehículo")
                     .setItems(new CharSequence[]{"Tomar foto", "Galería"}, (dlg, which) -> {
@@ -222,4 +223,38 @@ public class VehiculoFragment extends Fragment {
             fotoBytes = baos.toByteArray();
         }
     }
+
+    private void solicitarPermisos() {
+        String[] permisos = {
+                android.Manifest.permission.CAMERA,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+        };
+
+        ArrayList<String> permisosNoOtorgados = new ArrayList<>();
+
+        for (String permiso : permisos) {
+            if (requireContext().checkSelfPermission(permiso) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                permisosNoOtorgados.add(permiso);
+            }
+        }
+
+        if (!permisosNoOtorgados.isEmpty()) {
+            requestPermissions(permisosNoOtorgados.toArray(new String[0]), 101);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 101) {
+            for (int result : grantResults) {
+                if (result != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(requireContext(), "Debes aceptar los permisos para usar cámara y galería", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+        }
+    }
+
+
 }
