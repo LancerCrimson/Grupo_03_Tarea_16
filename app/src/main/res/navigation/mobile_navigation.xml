@@ -85,4 +85,10 @@
         android:label="Inicio"
         tools:layout="@layout/fragment_feed" />
 
+    <fragment
+        android:id="@+id/nav_cerrarsesion"
+        android:name="com.example.grupo_03_tarea_16.CerrarSesionFragment"
+        android:label="CerrarSesion"
+        tools:layout="@layout/fragment_cerrar_sesion" />
+
 </navigation>

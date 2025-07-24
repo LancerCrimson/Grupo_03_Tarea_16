@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient"
+    android:background="#BF1E1E1E"
     tools:context=".LoginActivity">
 
     <androidx.cardview.widget.CardView
@@ -13,8 +13,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
-        android:elevation="8dp"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp"
+        app:cardBackgroundColor="@color/dark_background"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp"
+            android:padding="28dp"
             android:gravity="center_horizontal">
 
             <TextView
@@ -32,41 +33,56 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Iniciar Sesión"
-                android:textSize="24sp"
+                android:textSize="28sp"
                 android:textStyle="bold"
-                android:textColor="#1E88E5"
-                android:layout_marginBottom="24dp" />
+                android:textColor="@color/accent"
+                android:layout_marginBottom="32dp"/>
 
             <EditText
                 android:id="@+id/etCorreo"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Usuario"
-                android:inputType="textPersonName"
-                android:background="@drawable/bg_edittextlogin"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                android:textColor="@android:color/black" />
+                android:layout_height="55dp"
+                android:hint="Correo"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/bg_border_input"
+                android:textColorHint="#B0B0B0"
+                android:textColor="@android:color/white"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="20dp"/>
 
             <EditText
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="55dp"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
-                android:background="@drawable/bg_edittextlogin"
-                android:padding="16dp"
-                android:layout_marginBottom="24dp"
-                android:textColor="@android:color/black" />
+                android:background="@drawable/bg_border_input"
+                android:textColorHint="#B0B0B0"
+                android:textColor="@android:color/white"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="30dp"/>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="55dp"
                 android:text="Ingresar"
+                android:textStyle="bold"
+                android:textSize="18sp"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:background="@drawable/bg_gradient" />
+                android:background="@drawable/bg_button_accent"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/txt_registrar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¿No tienes una cuenta? Regístrate"
+                android:textColor="#B0B0B0"
+                android:textSize="12sp"
+                android:layout_marginTop="20dp"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
