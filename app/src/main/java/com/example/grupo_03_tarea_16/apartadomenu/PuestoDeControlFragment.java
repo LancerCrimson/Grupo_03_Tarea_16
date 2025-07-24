@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.grupo_03_tarea_16.R;
 import com.example.grupo_03_tarea_16.adapter.adaptermenu.PuestoControlAdapter;
@@ -112,6 +113,8 @@ public class PuestoDeControlFragment extends Fragment {
                 puestoControlAdapter.notifyDataSetChanged();
                 et_idpuestocontrol.setText("");
                 et_ubicacion.setText("");
+
+                Toast.makeText(requireContext(), "Puesto de Control registrado", Toast.LENGTH_SHORT).show();
             }
         });
 

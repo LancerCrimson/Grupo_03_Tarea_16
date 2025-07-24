@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.grupo_03_tarea_16.R;
 import com.example.grupo_03_tarea_16.adapter.adapterbarra.AgenteAdapter;
@@ -123,6 +124,7 @@ public class AgenteFragment extends Fragment {
                 etNombre.setText("");
                 etRango.setText("");
 
+                Toast.makeText(requireContext(), "Te volviste Agente", Toast.LENGTH_SHORT).show();
             }
         });
 

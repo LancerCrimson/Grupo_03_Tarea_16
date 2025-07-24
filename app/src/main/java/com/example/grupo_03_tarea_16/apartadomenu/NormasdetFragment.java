@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.grupo_03_tarea_16.R;
 import com.example.grupo_03_tarea_16.adapter.adaptermenu.NormasAdapter;
@@ -100,6 +101,8 @@ public class NormasdetFragment extends Fragment {
                 et_idnorma.setText("");
                 et_numnorma.setText("");
                 et_descripcion.setText("");
+
+                Toast.makeText(requireContext(), "Norma registrada", Toast.LENGTH_SHORT).show();
             }
         });
 

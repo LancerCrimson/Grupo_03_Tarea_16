@@ -1,5 +1,7 @@
 package com.example.grupo_03_tarea_16.fragmentos;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.grupo_03_tarea_16.R;
 import com.example.grupo_03_tarea_16.adapter.adapterbarra.InfraccionAdapter;
@@ -22,6 +25,7 @@ import com.example.grupo_03_tarea_16.modelo.Vehiculo;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -93,6 +97,36 @@ public class InfraccionFragment extends Fragment {
 
         DBHelper dbHelper = new DBHelper(getActivity());
 
+        et_fecha.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            DatePickerDialog datePicker = new DatePickerDialog(
+                    requireContext(),
+                    (view1, year, month, dayOfMonth) -> {
+                        String fechaSeleccionada = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth);
+                        et_fecha.setText(fechaSeleccionada);
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
+            datePicker.show();
+        });
+
+        et_hora.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            TimePickerDialog timePicker = new TimePickerDialog(
+                    requireContext(),
+                    (view12, hourOfDay, minute) -> {
+                        String horaSeleccionada = String.format("%02d:%02d", hourOfDay, minute);
+                        et_hora.setText(horaSeleccionada);
+                    },
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    true
+            );
+            timePicker.show();
+        });
+
 
         ArrayList<Infraccion> listaInfracciones = dbHelper.get_all_Infraccion();
         ArrayList<Agente> listaAgentes = dbHelper.getAllAgente();
@@ -126,10 +160,14 @@ public class InfraccionFragment extends Fragment {
 
             int idInfraccion = Integer.parseInt(et_idinfraccion.getText().toString().trim());
             double valorMulta = Double.parseDouble(et_valormulta.getText().toString().trim());
+
             String fecha = et_fecha.getText().toString().trim();
             String hora = et_hora.getText().toString().trim();
 
-            if (!fecha.isEmpty() && !hora.isEmpty()) {
+            if (hora.isEmpty() || fecha.isEmpty()) {
+                Toast.makeText(requireContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
+                return;
+            }
                 Infraccion nueva = new Infraccion(idInfraccion, idAgente, numPlaca, valorMulta, fecha, idNorma, hora);
                 dbHelper.InsertarInfraccion(nueva);
 
@@ -141,7 +179,8 @@ public class InfraccionFragment extends Fragment {
                 et_valormulta.setText("");
                 et_fecha.setText("");
                 et_hora.setText("");
-            }
+
+            Toast.makeText(requireContext(), "Infracción registrada", Toast.LENGTH_SHORT).show();
         });
 
         return view;

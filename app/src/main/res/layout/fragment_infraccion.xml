@@ -31,6 +31,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_idinfraccion"
+                android:inputType="number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -67,6 +68,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_valormulta"
+                android:inputType="number"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -80,8 +82,11 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_fecha"
+                android:inputType="date"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:clickable="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -104,8 +109,11 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_hora"
+                android:inputType="time"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:clickable="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
