@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.grupo_03_tarea_16.R;
 import com.example.grupo_03_tarea_16.adapter.adaptermenu.OficinaAdapter;
@@ -88,8 +89,9 @@ public class OficinagobFragment extends Fragment {
 
         DBHelper dbHelper = new DBHelper(getContext());
 
-        ArrayList<Vehiculo> listaVehiculos = dbHelper.getAllVehiculo();
         ArrayList<OficinaGob> listaOficina = dbHelper.get_all_OficinaGob();
+        ArrayList<Vehiculo> listaVehiculos = dbHelper.getAllVehiculo();
+
         OficinaAdapter adapter = new OficinaAdapter(getContext(), listaOficina, listaVehiculos);
         lv_oficina.setAdapter(adapter);
 
@@ -101,8 +103,10 @@ public class OficinagobFragment extends Fragment {
             String idoficinagob = et_idoficinagob.getText().toString().trim();
             String valorvehiculo = et_valorvehiculo.getText().toString().trim();
             String npoliza = et_npoliza.getText().toString().trim();
+
             Vehiculo vehiculoSeleccionado = (Vehiculo) spn_numplaca.getSelectedItem();
             String numPlaca = vehiculoSeleccionado.getNumPlaca();
+
             String ubicacion = et_ubicacion.getText().toString().trim();
             if (!idoficinagob.isEmpty() && !valorvehiculo.isEmpty() && !npoliza.isEmpty()
                     && !ubicacion.isEmpty()) {
