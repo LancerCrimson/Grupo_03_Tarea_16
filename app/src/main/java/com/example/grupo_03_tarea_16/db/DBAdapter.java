@@ -164,7 +164,7 @@ public class DBAdapter {
                     KEY_VEHICULO_MODELO + " TEXT NOT NULL, " +
                     KEY_VEHICULO_MOTOR + " TEXT NOT NULL, " +
                     KEY_VEHICULO_YEAR + " INTEGER NOT NULL, " +
-                    KEY_VEHICULO_MEDIA + " TEXT NOT NULL, " +
+                    KEY_VEHICULO_MEDIA + " BLOB, " +
                     KEY_VEHICULO_CEDULAP + " TEXT NOT NULL, " +
                     "FOREIGN KEY (" + KEY_VEHICULO_CEDULAP + ") REFERENCES " +
                     TABLE_PROPIETARIO + "(" + KEY_CEDULAP + ") ON DELETE CASCADE" +
@@ -228,7 +228,7 @@ public class DBAdapter {
                     KEY_ACCIDENTE_DESCRIPCION + " TEXT NOT NULL, " +
                     KEY_ACCIDENTE_LATITUD + " REAL NOT NULL, " +
                     KEY_ACCIDENTE_LONGITUD + " REAL NOT NULL, " +
-                    KEY_ACCIDENTE_MEDIA + " TEXT NOT NULL, " +
+                    KEY_ACCIDENTE_MEDIA + " BLOB, " +
                     "FOREIGN KEY (" + KEY_ACCIDENTE_NUMPLACA + ") REFERENCES " +
                     TABLE_VEHICULO + "(" + KEY_NUMPLACA + ") ON DELETE CASCADE, " +
                     "FOREIGN KEY (" + KEY_ACCIDENTE_ID_AGENTE + ") REFERENCES " +
@@ -721,7 +721,7 @@ public class DBAdapter {
                 vehiculo.setModelo(cursor.getString(2));
                 vehiculo.setMotor(cursor.getString(3));
                 vehiculo.setYear(cursor.getInt(4));
-                vehiculo.setMedia(cursor.getString(5));
+                vehiculo.setMedia(cursor.getBlob(5));
                 vehiculo.setCedulaP(cursor.getString(6));
             }
             cursor.close();
@@ -744,7 +744,7 @@ public class DBAdapter {
                     vehiculo.setModelo(cursor.getString(2));
                     vehiculo.setMotor(cursor.getString(3));
                     vehiculo.setYear(cursor.getInt(4));
-                    vehiculo.setMedia(cursor.getString(5));
+                    vehiculo.setMedia(cursor.getBlob(5));
                     vehiculo.setCedulaP(cursor.getString(6));
                     lista.add(vehiculo);
                 } while (cursor.moveToNext());
@@ -1138,7 +1138,7 @@ public class DBAdapter {
                 accidente.setDescripcion(cursor.getString(5));
                 accidente.setLatitud(cursor.getDouble(6));
                 accidente.setLongitud(cursor.getDouble(7));
-                accidente.setMedia(cursor.getString(8));
+                accidente.setMedia(cursor.getBlob(8));
             }
             cursor.close();
         } catch (Exception e) {
@@ -1163,7 +1163,7 @@ public class DBAdapter {
                     accidente.setDescripcion(cursor.getString(5));
                     accidente.setLatitud(cursor.getDouble(6));
                     accidente.setLongitud(cursor.getDouble(7));
-                    accidente.setMedia(cursor.getString(8));
+                    accidente.setMedia(cursor.getBlob(8));
                     lista.add(accidente);
                 } while (cursor.moveToNext());
             }

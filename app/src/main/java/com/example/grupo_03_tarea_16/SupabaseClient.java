@@ -3,6 +3,8 @@ package com.example.grupo_03_tarea_16;
 import android.content.Context;
 import android.net.Uri;
 
+import com.example.grupo_03_tarea_16.modelo.Accidente;
+import com.example.grupo_03_tarea_16.modelo.Acta;
 import com.example.grupo_03_tarea_16.modelo.Agente;
 import com.example.grupo_03_tarea_16.modelo.Audiencia;
 import com.example.grupo_03_tarea_16.modelo.Infraccion;
@@ -19,7 +21,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
+import android.util.Base64;
 import okhttp3.Call;
 import okhttp3.Callback;
 
@@ -434,6 +436,8 @@ public class SupabaseClient {
 
     // ===================== VEHICULO ===================== //
 
+
+
     public static void insertVehiculo(Vehiculo vehiculo, Callback callback) {
         String url = SUPABASE_URL + "/vehiculo";
 
@@ -444,8 +448,16 @@ public class SupabaseClient {
             jsonObject.put("modelo", vehiculo.getModelo());
             jsonObject.put("motor", vehiculo.getMotor());
             jsonObject.put("year", vehiculo.getYear());
-            jsonObject.put("media", vehiculo.getMedia());
-            jsonObject.put("cedulap", vehiculo.getCedulaP()); // FK
+            jsonObject.put("cedulap", vehiculo.getCedulaP()); // FK a propietario
+
+            // Conversión del byte[] de la imagen a base64
+            if (vehiculo.getMedia() != null) {
+                String mediaBase64 = Base64.encodeToString(vehiculo.getMedia(), Base64.NO_WRAP);
+                jsonObject.put("media", mediaBase64);
+            } else {
+                jsonObject.put("media", JSONObject.NULL);  // Si no hay imagen
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
             return;
@@ -907,6 +919,175 @@ public class SupabaseClient {
 
         client.newCall(request).enqueue(callback);
     }
+
+
+
+
+
+
+    // INSERTAR accidente
+    public static void insertarAccidente(Accidente accidente, Callback callback) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("numplaca", accidente.getNumPlaca());
+            json.put("id_agente", accidente.getIdAgente());
+            json.put("hora", accidente.getHora());
+            json.put("fecha", accidente.getFecha());
+            json.put("descripcion", accidente.getDescripcion());
+            json.put("latitud", accidente.getLatitud());
+            json.put("longitud", accidente.getLongitud());
+            json.put("media", Base64.encodeToString(accidente.getMedia(), Base64.NO_WRAP)); // Convertir a base64
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/accidente")
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    // LISTAR accidentes
+    public static void listarAccidentes(Callback callback) {
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/accidente?select=*")
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    // ACTUALIZAR accidente
+    public static void actualizarAccidente(int idAccidente, Accidente accidente, Callback callback) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("numplaca", accidente.getNumPlaca());
+            json.put("id_agente", accidente.getIdAgente());
+            json.put("hora", accidente.getHora());
+            json.put("fecha", accidente.getFecha());
+            json.put("descripcion", accidente.getDescripcion());
+            json.put("latitud", accidente.getLatitud());
+            json.put("longitud", accidente.getLongitud());
+            json.put("media", Base64.encodeToString(accidente.getMedia(), Base64.NO_WRAP));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/accidente?id_accidente=eq." + idAccidente)
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .addHeader("Prefer", "return=representation")
+                .patch(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    // ELIMINAR accidente
+    public static void eliminarAccidente(int idAccidente, Callback callback) {
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/accidente?id_accidente=eq." + idAccidente)
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+
+
+
+
+
+    // INSERTAR acta
+    public static void insertarActa(Acta acta, Callback callback) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("id_accidente", acta.getIdAccidente());
+            json.put("id_audiencia", acta.getIdAudiencia());
+            json.put("hora", acta.getHora());
+            json.put("id_zona", acta.getIdZona());
+            json.put("id_agente", acta.getIdAgente());
+            json.put("fecha", acta.getFecha());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/acta")
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    // LISTAR actas
+    public static void listarActas(Callback callback) {
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/acta?select=*")
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    // ACTUALIZAR acta
+    public static void actualizarActa(int idActa, Acta acta, Callback callback) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("id_accidente", acta.getIdAccidente());
+            json.put("id_audiencia", acta.getIdAudiencia());
+            json.put("hora", acta.getHora());
+            json.put("id_zona", acta.getIdZona());
+            json.put("id_agente", acta.getIdAgente());
+            json.put("fecha", acta.getFecha());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/acta?id_acta=eq." + idActa)
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .addHeader("Prefer", "return=representation")
+                .patch(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    // ELIMINAR acta
+    public static void eliminarActa(int idActa, Callback callback) {
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/acta?id_acta=eq." + idActa)
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
 
 
 

@@ -6,6 +6,15 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,32 +25,48 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Grupo_03_Tarea_16"
         tools:targetApi="31">
-        <activity
-            android:name=".CerrarSesion"
-            android:exported="false"
-            android:theme="@style/Theme.Grupo_03_Tarea_16" />
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!--
+             TODO: Before you run your application, you need a Google Maps API key.
+
+             To get one, follow the directions here:
+
+                https://developers.google.com/maps/documentation/android-sdk/get-api-key
+
+             Once you have your API key (it starts with "AIza"), define a new property in your
+             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
+             "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
+        -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAw644RjVRFl6EB8e3ShdA6jT_szrDXgvs" />
+
+        <activity android:name=".fragmentos.SeleccionarUbicacionActivity" />
 
         <activity
             android:name=".menu"
             android:exported="false"
             android:label="@string/title_activity_menu"
-            android:theme="@style/Theme.Grupo_03_Tarea_16.NoActionBar" /> <!-- LoginActivity como pantalla principal -->
+            android:theme="@style/Theme.Grupo_03_Tarea_16.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- MainActivity sin intent-filter -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="true" />
+        </activity>
     </application>
 
 </manifest>

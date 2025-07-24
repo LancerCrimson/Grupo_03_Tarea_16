@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@id/nav_feed">
 
     <fragment
         android:id="@+id/nav_home"
@@ -64,5 +64,25 @@
         android:name="com.example.grupo_03_tarea_16.fragmentos.InfraccionFragment"
         android:label="Infraccion"
         tools:layout="@layout/fragment_infraccion" />
+    <fragment
+        android:id="@+id/nav_vehiculo"
+        android:name="com.example.grupo_03_tarea_16.apartadomenu.VehiculoFragment"
+        android:label="Vehiculo"
+        tools:layout="@layout/fragment_vehiculo" />
+    <fragment
+        android:id="@+id/nav_accidente"
+        android:name="com.example.grupo_03_tarea_16.fragmentos.AccidenteFragment"
+        android:label="Accidente"
+        tools:layout="@layout/fragment_accidente" />
+    <fragment
+        android:id="@+id/nav_acta"
+        android:name="com.example.grupo_03_tarea_16.fragmentos.ActaFragment"
+        android:label="Acta"
+        tools:layout="@layout/fragment_acta" />
+    <fragment
+        android:id="@+id/nav_feed"
+        android:name="com.example.grupo_03_tarea_16.fragmentos.FeedFragment"
+        android:label="Inicio"
+        tools:layout="@layout/fragment_feed" />
 
 </navigation>
