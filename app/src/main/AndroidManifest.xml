@@ -3,19 +3,16 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
 
     <application
         android:allowBackup="true"
@@ -27,6 +24,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Grupo_03_Tarea_16"
         tools:targetApi="31">
+        <activity
+            android:name=".RegistrarUsuarioActivity"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -37,7 +37,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
 
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
@@ -51,35 +50,26 @@
              "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
         -->
 
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAw644RjVRFl6EB8e3ShdA6jT_szrDXgvs" />
 
         <activity android:name=".fragmentos.SeleccionarUbicacionActivity" />
-
         <activity
             android:name=".menu"
             android:exported="false"
             android:label="@string/title_activity_menu"
             android:theme="@style/Theme.Grupo_03_Tarea_16.NoActionBar" />
 
-
-        <!-- LoginActivity como pantalla principal -->
-
         <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-        <!-- MainActivity ya no es pantalla principal
-        <activity android:name=".MainActivity" android:exported="false" /> -->
-
 
         <activity
             android:name=".MainActivity"

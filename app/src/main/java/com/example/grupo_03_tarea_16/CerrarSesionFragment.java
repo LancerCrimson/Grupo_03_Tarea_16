@@ -40,7 +40,6 @@ public class CerrarSesionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         AppCompatButton btnCerrarSesion = view.findViewById(R.id.btnCerrarSesion);
         AppCompatButton btnCancelar = view.findViewById(R.id.btnCancelar);
 
