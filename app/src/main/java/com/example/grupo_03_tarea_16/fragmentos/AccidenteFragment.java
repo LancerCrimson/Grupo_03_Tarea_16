@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -16,9 +17,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
+import android.Manifest;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.grupo_03_tarea_16.R;
@@ -27,6 +29,8 @@ import com.example.grupo_03_tarea_16.adapter.adapterbarra.AccidenteAdapter;
 import com.example.grupo_03_tarea_16.modelo.Accidente;
 import com.example.grupo_03_tarea_16.modelo.Agente;
 import com.example.grupo_03_tarea_16.modelo.Vehiculo;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONArray;
@@ -177,12 +181,40 @@ public class AccidenteFragment extends Fragment {
         }
     }
 
-    private void simularUbicacion() {
-        // Se puede integrar con LocationManager o usar una ubicación simulada
-        latitud = -12.05;
-        longitud = -77.05;
-        Toast.makeText(requireContext(), "Ubicación simulada agregada", Toast.LENGTH_SHORT).show();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1001) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                simularUbicacion(); // Llama de nuevo ahora que tienes permiso
+            } else {
+                Toast.makeText(requireContext(), "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
+
+
+    private void simularUbicacion() {
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(requireActivity(), location -> {
+                        if (location != null) {
+                            latitud = location.getLatitude();
+                            longitud = location.getLongitude();
+                            Toast.makeText(requireContext(), "Ubicación obtenida", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(requireContext(), "No se pudo obtener la ubicación", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1001);
+        }
+    }
+
 
     private void guardarAccidente() {
         String placa = spPlaca.getSelectedItem().toString();
