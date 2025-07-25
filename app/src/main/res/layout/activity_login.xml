@@ -5,11 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:background="@drawable/bg_gradient"
-
     android:background="#BF1E1E1E"
-
     tools:context=".LoginActivity">
 
     <androidx.cardview.widget.CardView
@@ -17,10 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
-
         android:elevation="8dp"
-        app:cardCornerRadius="16dp"
-
         app:cardCornerRadius="24dp"
         app:cardElevation="12dp"
         app:cardBackgroundColor="@color/dark_background"
@@ -35,9 +28,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
 
-            android:padding="24dp"
-
             android:padding="28dp"
+
 
             android:gravity="center_horizontal">
 
@@ -46,12 +38,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Iniciar Sesión"
-
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="#1E88E5"
-                android:layout_marginBottom="24dp" />
-
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:textColor="@color/accent"
@@ -61,14 +47,6 @@
             <EditText
                 android:id="@+id/etCorreo"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Usuario"
-                android:inputType="textPersonName"
-                android:background="@drawable/bg_edittextlogin"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                android:textColor="@android:color/black" />
-
                 android:layout_height="55dp"
                 android:hint="Correo"
                 android:inputType="textEmailAddress"
@@ -86,29 +64,13 @@
                 android:layout_height="50dp"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
-                android:background="@drawable/bg_edittextlogin"
-                android:padding="16dp"
-                android:layout_marginBottom="24dp"
-                android:textColor="@android:color/black" />
-
-            <Button
-                android:id="@+id/btnLogin"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="Ingresar"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:background="@drawable/bg_gradient" />
-
-                android:layout_height="55dp"
-                android:hint="Contraseña"
-                android:inputType="textPassword"
                 android:background="@drawable/bg_border_input"
                 android:textColorHint="#B0B0B0"
                 android:textColor="@android:color/white"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:layout_marginBottom="30dp"/>
+                android:padding="16dp"
+                android:layout_marginBottom="24dp" />
+
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogin"

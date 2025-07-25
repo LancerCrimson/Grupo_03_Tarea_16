@@ -443,7 +443,7 @@ public class SupabaseClient {
     // ===================== VEHICULO ===================== //
 
 
-
+/*
     public static void insertVehiculo(Vehiculo vehiculo, Callback callback) {
         String url = SUPABASE_URL + "/vehiculo";
 
@@ -483,7 +483,39 @@ public class SupabaseClient {
                 .build();
 
         client.newCall(request).enqueue(callback);
+    }*/
+
+    public static void insertVehiculo(Vehiculo vehiculo, Callback callback) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("numplaca", vehiculo.getNumPlaca());
+            json.put("marca", vehiculo.getMarca());
+            json.put("modelo", vehiculo.getModelo());
+            json.put("motor", vehiculo.getMotor());
+            json.put("year", vehiculo.getYear());
+            json.put("cedulap", vehiculo.getCedulaP());
+
+            if (vehiculo.getMedia() != null) {
+                json.put("media", Base64.encodeToString(vehiculo.getMedia(), Base64.NO_WRAP));
+            } else {
+                json.put("media", JSONObject.NULL);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/vehiculo")
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
     }
+
 
     public static void updateVehiculo(String numPlaca, Vehiculo vehiculo, Callback callback) {
         String url = SUPABASE_URL + "/vehiculo?numplaca=eq." + numPlaca;
@@ -532,7 +564,7 @@ public class SupabaseClient {
 
         client.newCall(request).enqueue(callback);
     }
-
+/*
     public static void getVehiculos(Callback callback) {
         String url = SUPABASE_URL + "/vehiculo?select=*";
 
@@ -545,7 +577,30 @@ public class SupabaseClient {
                 .build();
 
         client.newCall(request).enqueue(callback);
+    }*/
+
+    public static void getVehiculos(Callback callback) {
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/vehiculo?select=*")
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(callback);
     }
+
+/*
+    public static void listarAccidentes(Callback callback) {
+        Request request = new Request.Builder()
+                .url(SUPABASE_URL + "/accidente?select=*")
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }*/
 
 
 
