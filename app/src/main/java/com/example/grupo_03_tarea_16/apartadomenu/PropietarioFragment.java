@@ -154,10 +154,6 @@ public class PropietarioFragment extends Fragment {
                     .show();
             return true;
 
-
-                Toast.makeText(requireContext(), "Propietario registrado", Toast.LENGTH_SHORT).show();
-            }
-
         });
 
         cargarPropietarios();

@@ -4,11 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:background="@drawable/bg_gradient"
-
     android:background="#BF1E1E1E"
-
     tools:context=".LoginActivity">
 
     <androidx.cardview.widget.CardView
@@ -63,10 +59,11 @@
                 android:layout_height="50dp"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
-                android:background="@drawable/bg_edittextlogin"
+                android:background="@drawable/bg_border_input"
                 android:padding="16dp"
                 android:layout_marginBottom="24dp"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/white"
+                android:textColorHint="#B0B0B0" />
 
          
             <androidx.appcompat.widget.AppCompatButton
