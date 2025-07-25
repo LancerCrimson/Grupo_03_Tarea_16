@@ -1,4 +1,4 @@
-/*package com.example.grupo_03_tarea_16.fragmentos;
+package com.example.grupo_03_tarea_16.fragmentos;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -43,21 +43,45 @@ public class ActaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_acta, container, false);
 
-        // Inicializar vistas
-        spAccidente = view.findViewById(R.id.spAccidente);
-        spAudiencia = view.findViewById(R.id.spAudiencia);
-        spZona = view.findViewById(R.id.spZona);
-        spAgente = view.findViewById(R.id.spAgente);
-        etHora = view.findViewById(R.id.etHora);
-        etFecha = view.findViewById(R.id.etFecha);
-        btnGuardar = view.findViewById(R.id.btnGuardar);
-        lvActas = view.findViewById(R.id.lvActas);
+        // 🔄 IDs corregidos para coincidir con el XML
+        spAccidente = view.findViewById(R.id.sp_accidente);
+        spAudiencia = view.findViewById(R.id.sp_audiencia);
+        spZona = view.findViewById(R.id.sp_zona);
+        spAgente = view.findViewById(R.id.sp_agente);
+        etHora = view.findViewById(R.id.et_hora);
+        etFecha = view.findViewById(R.id.et_fecha);
+        btnGuardar = view.findViewById(R.id.btn_guardar_acta);
+        lvActas = view.findViewById(R.id.lv_actas);
 
         actaAdapter = new ActaAdapter(requireContext(), actas);
         lvActas.setAdapter(actaAdapter);
 
         cargarSpinners();
         cargarActas();
+
+        etFecha.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            new android.app.DatePickerDialog(requireContext(), (view1, year1, month1, dayOfMonth) -> {
+                String fechaSeleccionada = year1 + "-" + String.format("%02d", month1 + 1) + "-" + String.format("%02d", dayOfMonth);
+                etFecha.setText(fechaSeleccionada);
+            }, year, month, day).show();
+        });
+
+        // 🕒 Picker de Hora
+        etHora.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+
+            new android.app.TimePickerDialog(requireContext(), (view1, hourOfDay, minute1) -> {
+                String horaSeleccionada = String.format("%02d:%02d", hourOfDay, minute1);
+                etHora.setText(horaSeleccionada);
+            }, hour, minute, true).show(); // true = formato 24h
+        });
 
         btnGuardar.setOnClickListener(v -> guardarActa());
 
@@ -97,12 +121,13 @@ public class ActaFragment extends Fragment {
                     List<String> nombres = new ArrayList<>();
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject obj = array.getJSONObject(i);
-                        Audiencia audiencia = new Audiencia(
-                                obj.getInt("id_audiencia"),
-                                obj.getString("descripcion")
-                        );
+                        Audiencia audiencia = new Audiencia();
+                        audiencia.setIdAudiencia(obj.getInt("id_audiencia"));
+                        audiencia.setLugar(obj.getString("lugar"));
+
                         audiencias.add(audiencia);
-                        nombres.add(audiencia.getDescripcion());
+                        nombres.add(audiencia.getLugar());
+
                     }
                     requireActivity().runOnUiThread(() ->
                             spAudiencia.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, nombres)));
@@ -127,7 +152,7 @@ public class ActaFragment extends Fragment {
                                 obj.getString("ubicacion")
                         );
                         zonas.add(zona);
-                        nombres.add(zona.getNombre());  // Usa getUbicacion() si getNombre() no existe
+                        nombres.add(zona.getNombreZona());  // Usa getUbicacion() si getNombre() no existe
                     }
                     requireActivity().runOnUiThread(() ->
                             spZona.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, nombres)));
@@ -227,4 +252,4 @@ public class ActaFragment extends Fragment {
     }
 }
 
-*/
+

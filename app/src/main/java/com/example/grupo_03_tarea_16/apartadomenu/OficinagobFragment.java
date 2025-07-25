@@ -1,9 +1,5 @@
 package com.example.grupo_03_tarea_16.apartadomenu;
-
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,117 +9,181 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.grupo_03_tarea_16.R;
+import com.example.grupo_03_tarea_16.SupabaseClient;
 import com.example.grupo_03_tarea_16.adapter.adaptermenu.OficinaAdapter;
-import com.example.grupo_03_tarea_16.db.DBHelper;
 import com.example.grupo_03_tarea_16.modelo.OficinaGob;
 import com.example.grupo_03_tarea_16.modelo.Vehiculo;
 import com.google.android.material.textfield.TextInputEditText;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link OficinagobFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
 public class OficinagobFragment extends Fragment {
 
-    private TextInputEditText et_idoficinagob, et_valorvehiculo, et_npoliza, et_ubicacion;
-    private Spinner spn_numplaca;
-    private Button btn_guardar;
-    private ListView lv_oficina;
+    private TextInputEditText etId, etValor, etPoliza, etUbicacion;
+    private Spinner spnPlaca;
+    private Button btnGuardar;
+    private ListView lvOficina;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ArrayList<String> placasList = new ArrayList<>();
+    private ArrayList<OficinaGob> oficinaList = new ArrayList<>();
+    private OficinaAdapter oficinaAdapter;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ArrayList<Vehiculo> vehiculoList = new ArrayList<>();
 
-    public OficinagobFragment() {
-        // Required empty public constructor
-    }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment OficinagobFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static OficinagobFragment newInstance(String param1, String param2) {
-        OficinagobFragment fragment = new OficinagobFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_oficinagob, container, false);
-        et_idoficinagob = view.findViewById(R.id.et_idoficinagob);
-        et_valorvehiculo = view.findViewById(R.id.et_valorvehiculo);
-        et_npoliza = view.findViewById(R.id.et_npoliza);
-        spn_numplaca = view.findViewById(R.id.spn_numplaca);
-        et_ubicacion = view.findViewById(R.id.et_ubicacion);
-        btn_guardar = view.findViewById(R.id.btn_guardar);
-        lv_oficina = view.findViewById(R.id.lv_oficina);
 
-        DBHelper dbHelper = new DBHelper(getContext());
+        etId = view.findViewById(R.id.et_idoficinagob);
+        etValor = view.findViewById(R.id.et_valorvehiculo);
+        etPoliza = view.findViewById(R.id.et_npoliza);
+        etUbicacion = view.findViewById(R.id.et_ubicacion);
+        spnPlaca = view.findViewById(R.id.spn_numplaca);
+        btnGuardar = view.findViewById(R.id.btn_guardar);
+        lvOficina = view.findViewById(R.id.lv_oficina);
 
-        ArrayList<OficinaGob> listaOficina = dbHelper.get_all_OficinaGob();
-        ArrayList<Vehiculo> listaVehiculos = dbHelper.getAllVehiculo();
+        oficinaAdapter = new OficinaAdapter(requireContext(), oficinaList, vehiculoList);
 
-        OficinaAdapter adapter = new OficinaAdapter(getContext(), listaOficina, listaVehiculos);
-        lv_oficina.setAdapter(adapter);
 
-        ArrayAdapter<Vehiculo> vehiculoAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listaVehiculos);
-        vehiculoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spn_numplaca.setAdapter(vehiculoAdapter);
+        lvOficina.setAdapter(oficinaAdapter);
 
-        btn_guardar.setOnClickListener(v -> {
-            String idoficinagob = et_idoficinagob.getText().toString().trim();
-            String valorvehiculo = et_valorvehiculo.getText().toString().trim();
-            String npoliza = et_npoliza.getText().toString().trim();
+        cargarPlacas();
+        cargarOficinas();
 
-            Vehiculo vehiculoSeleccionado = (Vehiculo) spn_numplaca.getSelectedItem();
-            String numPlaca = vehiculoSeleccionado.getNumPlaca();
-
-            String ubicacion = et_ubicacion.getText().toString().trim();
-            if (!idoficinagob.isEmpty() && !valorvehiculo.isEmpty() && !npoliza.isEmpty()
-                    && !ubicacion.isEmpty()) {
-                int id = Integer.parseInt(idoficinagob);
-                double valor = Double.parseDouble(valorvehiculo);
-                OficinaGob nuevo = new OficinaGob(id, valor, npoliza, numPlaca, ubicacion);
-                dbHelper.InsertarOficinaGob(nuevo);
-                listaOficina.clear();
-                listaOficina.addAll(dbHelper.get_all_OficinaGob());
-                adapter.notifyDataSetChanged();
-                et_idoficinagob.setText("");
-                et_valorvehiculo.setText("");
-                et_npoliza.setText("");
-                et_ubicacion.setText("");
-            }
-        });
+        btnGuardar.setOnClickListener(v -> insertarOficina());
 
         return view;
+    }
+
+    private void cargarPlacas() {
+        SupabaseClient.getVehiculos(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(requireContext(), "Error cargando placas", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        JSONArray array = new JSONArray(response.body().string());
+                       /* placasList.clear();
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject obj = array.getJSONObject(i);
+                            placasList.add(obj.getString("numplaca"));
+                        }
+                        */
+
+                        placasList.clear();
+                        vehiculoList.clear();
+
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject obj = array.getJSONObject(i);
+                            String numplaca = obj.getString("numplaca");
+
+                            placasList.add(numplaca);
+
+                            Vehiculo vehiculo = new Vehiculo();
+                            vehiculo.setNumPlaca(numplaca);
+                            // Puedes agregar más campos si tu clase Vehiculo los tiene, como:
+                            // vehiculo.setNombreNumPlaca(obj.getString("descripcion") o algo similar)
+
+                            vehiculoList.add(vehiculo);
+                        }
+
+                        requireActivity().runOnUiThread(() -> {
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, placasList);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spnPlaca.setAdapter(adapter);
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private void cargarOficinas() {
+        SupabaseClient.getOficinaGobs(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(requireContext(), "Error al cargar oficinas", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        JSONArray array = new JSONArray(response.body().string());
+                        oficinaList.clear();
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject obj = array.getJSONObject(i);
+                            OficinaGob o = new OficinaGob(
+                                    obj.getInt("id_oficinagob"),
+                                    obj.getDouble("valorvehiculo"),
+                                    obj.getString("npoliza"),
+                                    obj.getString("numplaca"),
+                                    obj.getString("ubicacion")
+                            );
+                            oficinaList.add(o);
+                        }
+                        requireActivity().runOnUiThread(() -> oficinaAdapter.notifyDataSetChanged());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private void insertarOficina() {
+        String valorStr = etValor.getText().toString();
+        String npoliza = etPoliza.getText().toString();
+        String ubicacion = etUbicacion.getText().toString();
+        String placaSeleccionada = spnPlaca.getSelectedItem().toString();
+
+        if (valorStr.isEmpty() || npoliza.isEmpty() || ubicacion.isEmpty()) {
+            Toast.makeText(requireContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double valorVehiculo = Double.parseDouble(valorStr);
+        OficinaGob nueva = new OficinaGob(valorVehiculo, npoliza, placaSeleccionada, ubicacion);
+
+        SupabaseClient.insertOficinaGob(nueva, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(requireContext(), "Error al insertar", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (response.isSuccessful()) {
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(requireContext(), "Oficina insertada", Toast.LENGTH_SHORT).show();
+                        cargarOficinas();
+                    });
+                }
+            }
+        });
     }
 }

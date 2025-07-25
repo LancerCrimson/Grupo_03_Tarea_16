@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    android:background="@drawable/bg_gradient"
+
     android:background="#BF1E1E1E"
+
     tools:context=".LoginActivity">
 
     <androidx.cardview.widget.CardView
@@ -27,6 +31,7 @@
             android:orientation="vertical"
             android:padding="28dp">
 
+
             <TextView
                 android:id="@+id/tvLoginTitle"
                 android:layout_width="wrap_content"
@@ -36,6 +41,7 @@
                 android:textColor="@color/accent"
                 android:textSize="28sp"
                 android:textStyle="bold" />
+
 
             <EditText
                 android:id="@+id/etCorreo"
@@ -50,19 +56,19 @@
                 android:textColor="@android:color/white"
                 android:textColorHint="#B0B0B0" />
 
+
             <EditText
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginBottom="30dp"
-                android:background="@drawable/bg_border_input"
+                android:layout_height="50dp"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@android:color/white"
-                android:textColorHint="#B0B0B0" />
+                android:background="@drawable/bg_edittextlogin"
+                android:padding="16dp"
+                android:layout_marginBottom="24dp"
+                android:textColor="@android:color/black" />
 
+         
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"

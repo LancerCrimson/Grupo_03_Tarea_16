@@ -15,6 +15,7 @@ public class Zona {
         this.ubicacion = ubicacion;
     }
 
+
     @Override
     public String toString() {
         return ubicacion;

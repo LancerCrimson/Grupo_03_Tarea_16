@@ -6,25 +6,41 @@
     android:orientation="vertical"
     android:padding="24dp">
 
+
+    <Button
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.appcompat.widget.AppCompatButton
+
         android:id="@+id/btnCerrarSesion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cerrar Sesión"
+
+        android:backgroundTint="@color/black"
+        android:textColor="@android:color/white" />
+
+    <Button
+
         android:background="@drawable/button_border"
         android:textColor="@android:color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
+
         android:id="@+id/btnCancelar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cancelar"
         android:layout_marginTop="16dp"
+
+        android:backgroundTint="@android:color/darker_gray"
+        android:textColor="@android:color/white" />
+
         android:background="@drawable/button_border"
         android:backgroundTint="#FFD2D2"
         android:textColor="@android:color/black" />
+
 </LinearLayout>
