@@ -77,12 +77,15 @@ public class RegistrarUsuarioActivity extends AppCompatActivity {
                 Intent intent = new Intent(RegistrarUsuarioActivity.this, LoginActivity.class);
                 startActivity(intent);
                 Toast.makeText(this, "Registro exitoso", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
             }
             etNombre.setText("");
             etApellido.setText("");
             etCorreo.setText("");
             etPassword.setText("");
             etConfirmPassword.setText("");
+
         });
 
         txtIniciarSesion.setOnClickListener(v -> {
