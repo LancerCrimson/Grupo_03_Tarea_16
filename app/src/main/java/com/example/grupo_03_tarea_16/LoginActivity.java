@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etCorreo, etPassword;
     private Button btnLogin;
+    private LinearLayout txtRegistrar;
 
     private static final String BASE_URL = "https://wqpmwrgkkgfzdpsiyxhq.supabase.co/rest/v1";
     private static final String API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndxcG13cmdra2dmemRwc2l5eGhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMwMjM5OTYsImV4cCI6MjA2ODU5OTk5Nn0.WAXHiheRYrutcun7hcXlAJ8JGk2wacvqZnyjkfeqPKo";
@@ -38,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         etCorreo = findViewById(R.id.etCorreo);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        txtRegistrar = findViewById(R.id.txt_registrar);
 
         btnLogin.setOnClickListener(view -> {
             String correo = etCorreo.getText().toString().trim();
@@ -49,6 +53,13 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
             }
         });
+
+        txtRegistrar.setOnClickListener(view -> {
+            Intent intent = new Intent(LoginActivity.this, RegistrarUsuarioActivity.class);
+            startActivity(intent);
+        });
+
+
     }
 
     private void verificarLogin(String correo, String password) {
