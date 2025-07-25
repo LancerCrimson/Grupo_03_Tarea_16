@@ -40,16 +40,6 @@ public class CerrarSesionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        Button btnCerrarSesion = view.findViewById(R.id.btnCerrarSesion);
-        Button btnCancelar = view.findViewById(R.id.btnCancelar);
-
-        btnCerrarSesion.setOnClickListener(v -> {
-            // Puedes limpiar preferencias si usas login persistente
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-
         AppCompatButton btnCerrarSesion = view.findViewById(R.id.btnCerrarSesion);
         AppCompatButton btnCancelar = view.findViewById(R.id.btnCancelar);
 
